@@ -1,0 +1,10 @@
+<form class="form-inline" (ngSubmit)="onSubmit(playeredit.value)" #playeredit="ngForm" [hidden]="!player">
+  <div class="form-group">
+    <input type="text" id="name" placeholder="Name" class="form-control" required [ngModel]="player?.name" name="name" />
+  </div>
+  <div class="form-group">
+    <input type="text" id="handicap" placeholder="Handicap" class="form-control" required [ngModel]="player?.handicap" name="handicap" />
+  </div>
+  <button class="btn btn-success" type="submit" [disabled]="!playeredit.valid"><i class="fa fa-floppy-o fa-2x"></i></button>
+  <button class="btn btn-default" type="button" (click)="onCancel()"><i class="fa fa-ban fa-2x"></i></button>
+</form>

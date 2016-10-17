@@ -1,0 +1,146 @@
+<div class="row border-shadow">
+    <div class="row">
+        <div class="col-xs-6">
+            <h4>{{viewModel.format == 0 ? "8-Ball Scorecard" : "9-Ball Scorecard"}}</h4>
+        </div>
+        <div *ngIf="viewModel.otherScorecardId > 0" class="col-xs-6">
+            <button class="btn btn-sm btn-info" (click)="onOtherScorecard()">{{viewModel.format == 1 ? "8-Ball Scorecard" : "9-Ball Scorecard"}}</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <div><strong>{{viewModel.homeTeamName}}</strong> <span *ngIf="teamResults.homeTeamHandicap > 0">(+{{teamResults.homeTeamHandicap}})</span></div>
+            <div class="results-list">
+                <ul>
+                    <li>Pts: {{teamResults.homeTeamTotalPoints}}</li>
+                    <li>Rds: {{teamResults.homeTeamTotalRounds}}</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div><strong>{{viewModel.awayTeamName}}</strong> <span *ngIf="teamResults.awayTeamHandicap > 0">(+{{teamResults.awayTeamHandicap}})</span></div>
+            <div class="results-list">
+                <ul>
+                    <li>Pts: {{teamResults.awayTeamTotalPoints}}</li>
+                    <li>Rds: {{teamResults.awayTeamTotalRounds}}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="viewModel?.format == 0 && teamResults != undefined && teamResults.homeRoundsWon != undefined && teamResults.awayRoundsWon != undefined">
+        <div class="col-xs-6">
+            <div class="round_results">
+                <h6 class="text-primary text-uppercase">Rounds</h6>
+                <ul class="pagination">
+                    <li *ngFor="let homeRoundWon of teamResults.homeRoundsWon">
+                        {{homeRoundWon}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="round_results">
+                <h6 class="text-primary text-uppercase">Rounds</h6>
+                <ul class="pagination">
+                    <li *ngFor="let awayRoundWon of teamResults.awayRoundsWon">
+                        {{awayRoundWon}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" *ngIf="scorecardId > 0">
+    <div *ngIf="viewModel.state == 0 && editMode">
+        <div class="row" *ngIf="!handicapsAreNotSet">
+            <div class="col-sm-6">
+                <form class="form-group" #selectHome="ngForm" (ngSubmit)="addPlayerToRoster(true)">
+                    <select 
+                            [(ngModel)]="selectedHomePlayer" 
+                            class="form-control"
+                            name="homePlayer">
+                        <option 
+                                *ngFor="let player of viewModel.homePlayers" 
+                                [ngValue]="player">{{player.name}}</option>
+                    </select>
+                    <br />
+                    <button class="btn btn-success">Add Player</button>
+                </form>
+
+                
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Handicap</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let player of lineup.homePlayers; let i = index">
+                            <td>{{player.name}}</td>
+                            <td>{{player.handicap}}</td>
+                            <td><i class="glyphicon glyphicon-minus-sign" (click)="removePlayer(i, true)"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-6">
+                <form class="form-group" #selectAway="ngForm" (ngSubmit)="addPlayerToRoster(false)">
+                    <select 
+                            [(ngModel)]="selectedAwayPlayer" 
+                            class="form-control"
+                            name="awayPlayer">
+                        <option 
+                                *ngFor="let player of viewModel.awayPlayers" 
+                                [ngValue]="player">{{player.name}}</option>
+                    </select>
+                    <br />
+                    <button class="btn btn-success">Add Player</button>
+                </form>
+
+                
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Handicap</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let player of lineup.awayPlayers; let i = index">
+                            <td>{{player.name}}</td>
+                            <td>{{player.handicap}}</td>
+                            <td><i class="glyphicon glyphicon-minus-sign" (click)="removePlayer(i, false)"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="handicapsAreNotSet">
+            <div class="alert alert-danger" *ngFor="let player of playersWithNoHandicap">{{player.name}} does not have a handicap set!  Have manager fix and refresh score card.</div>
+        </div>
+
+        <hr />
+
+        <button 
+                class="btn btn-success" 
+                [disabled]="handicapsAreNotSet || lineup == undefined || lineup.homePlayers.length != requiredPlayerCount || lineup.awayPlayers.length != requiredPlayerCount" 
+                (click)="startMatches()"><i *ngIf="enteringLineup" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i> Start</button>
+
+    </div>
+    <div *ngIf="viewModel.state > 0 && viewModel.state != 3" class="col-sm-12">
+        <player-match [matches]="matches"
+                      [maxScore]="viewModel.format == 0 ? 15 : 1"
+                      [scorecardState]="viewModel.state"
+                      (onSaveScores)="getTeamResults()"
+                      (onFinalizeMatch)="finalizeMatch()">
+
+        </player-match>
+    </div>
+</div>

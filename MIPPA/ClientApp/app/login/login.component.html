@@ -1,0 +1,31 @@
+﻿<div class="row">
+    <form class="form-signin" #loginform="ngForm" (ngSubmit)="loginClick(loginform)">
+        <h2 class="form-signin-heading">MIPPA Login</h2>
+        <label for="inputUsername" class="sr-only">Email address</label>
+        <input 
+               type="text" 
+               id="inputUsername" 
+               class="form-control" 
+               placeholder="User Name" 
+               required 
+               autofocus
+               [ngModel]="username"
+               name="username">
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input 
+               type="password" 
+               id="inputPassword" 
+               class="form-control" 
+               placeholder="Password" 
+               required
+               [ngModel]="password"
+               name="password">
+        <div class="alert alert-danger" *ngIf="!loginViewModel?.valid"><strong>Error: </strong>Username and/or password is invalid or scorecard is not scheduled for today.</div>
+        <button 
+                class="btn btn-lg btn-primary btn-block" 
+                type="submit" 
+                [disabled]="!loginform.valid || loginInitiated">
+            <i *ngIf="loginInitiated" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i> Sign in
+        </button>
+    </form>
+</div>

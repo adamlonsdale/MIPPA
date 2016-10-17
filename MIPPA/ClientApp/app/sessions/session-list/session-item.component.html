@@ -1,0 +1,33 @@
+<div *ngIf="!editingSession">
+  <div class="list-group-item clearfix">
+    <div class="row">
+      <div class="col-md-12">
+        <h4 class="list-group-item-heading">{{session.name}}</h4>
+        <div class="list-group-item-text">
+          {{session.teams?.length}} Teams
+          <div class="alert alert-warning" [hidden]="session.teams?.length > 0">
+            <strong>Warning!</strong> You must add teams to manage session.
+          </div>
+          <div class="alert alert-warning" [hidden]="session.teams?.length % 2 == 0">
+            <strong>Warning!</strong> You must have an even number of teams to create a schedule.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <button class="btn btn-sm btn-default" type="button" (click)="onEdit()">Edit</button>
+        <button class="btn btn-sm btn-primary" type="button" (click)="onManageSession()">Manage</button>
+        <button class="btn btn-sm btn-info" type="button" (click)="onCreateSchedule()">Create Schedule</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="editingSession">
+  <div class="list-group-item">
+    <cp-session-edit 
+      [session]="session"
+      (onSessionSaved)="onSessionSaved($event)"
+      (onSessionCancel)="onSessionCancel()"></cp-session-edit>
+  </div>
+</div>

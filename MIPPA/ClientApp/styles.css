@@ -1,0 +1,26 @@
+﻿/* You can add global styles to this file, and also import other style files */
+
+.table-fixed thead {
+  width: 97%;
+}
+.table-fixed tbody {
+  height: 100px;
+  overflow-y: auto;
+  width: 100%;
+}
+.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
+  display: block;
+}
+.table-fixed tbody td, .table-fixed thead > tr> th {
+  float: left;
+  border-bottom-width: 0;
+}
+
+.affix {
+      top: 0;
+      width: 100%;
+}
+
+.affix + .container-fluid {
+  padding-top: 70px;
+}

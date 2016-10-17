@@ -1,0 +1,198 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="">
+
+    <link rel="stylesheet" type="text/css" href="vendors/css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="vendors/css/grid.css">
+    <link rel="stylesheet" type="text/css" href="vendors/css/ionicons.min.css">
+    <link rel="stylesheet" type="text/css" href="vendors/css/animate.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/style.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/queries.css">
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,300,100,300italic' rel='stylesheet' type='text/css'>
+    <title>MIPPA</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="row">
+                <ul class="main-nav js--main-nav">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">News</a></li>
+                    <li><a href="#">Tournaments</a></li>
+                    <li><a asp-action="leagues">Leagues</a></li>
+                    <li><a asp-controller="app" asp-action="login">App</a></li>
+                </ul>
+                <a class="mobile-nav-icon js--nav-icon"><i class="ion-navicon-round"></i></a>
+            </div>
+            <div class="header-text-box">
+                <h1>MIPPA</h1>
+                <a class="btn btn-full js--scroll-to-about" href="#">Learn More</a>
+                <a class="btn btn-ghost js--scroll-to-contact" href="#">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <section id="about" class="section-benefits js--section-about">
+        <div class="row">
+            <h2>What is MIPPA?</h2>
+            <p class="long-copy">
+                The Michigan Independent Pool Player Association, or MIPPA, is a league designated for pool players in the state of Michigan.
+                Below are some of the great benefits of participating in MIPPA.
+            </p>
+        </div>
+        <div class="row">
+            <div class="col span-1-of-4 box">
+                <i class="ion-ios-location icon-big"></i>
+                <h3>Local</h3>
+                <p>
+                    You can find a league at our around your current location. League generally runs in fall and in summer. League play is a perfect opportunity to meet up with new and old friends and have fun.
+                </p>
+            </div>
+            <div class="col span-1-of-4 box">
+                <i class="ion-cash icon-big"></i>
+                <h3>Paying It Forward</h3>
+                <p>
+                    The greatest advantage of participating in MIPPA is that proceeds to MIPPA equate to bigger payouts both in league and tournaments and all money stays in the state of Michigan!
+                </p>
+            </div>
+            <div class="col span-1-of-4 box">
+                <i class="ion-trophy icon-big"></i>
+                <h3>Annual Tournament</h3>
+                <p>
+                    Participating in 8 or more league dates in a MIPPA calendar year qualifies you for the annual state tournament.  The state tournament is held at Soaring Eagle Casino and Resort in Mt. Pleasant, MI.
+                </p>
+            </div>
+            <div class="col span-1-of-4 box">
+                <i class="ion-calculator icon-big"></i>
+                <h3>Web Application</h3>
+                <p>
+                    MIPPA houses a web application that works on major phones, tablets, and personal computers via a web browser.  The app keeps track of player/team statistics and scores
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-numbers">
+        <h2>By The Numbers</h2>
+        <div class="row">
+            <div class="col span-1-of-3 numbers-box js--wp-1">
+                # Players
+            </div>
+            <div class="col span-1-of-3 numbers-box js--wp-2">
+                $ admin fund
+            </div>
+            <div class="col span-1-of-3 numbers-box js--wp-3">
+                $ player fund
+            </div>
+        </div>
+    </section>
+
+    <section class="section-form js--section-contact" id="contact">
+        <div class="row">
+            <h2>Contact Us</h2>
+        </div>
+        <div class="row">
+            <form method="post" action="#" class="contact-form">
+                <div class="row">
+                    <div class="col span-1-of-3">
+                        <label for="name">Name</label>
+                    </div>
+                    <div class="col span-2-of-3">
+                        <input type="text" name="name" id="name" placeholder="Your name" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col span-1-of-3">
+                        <label for="email">Email</label>
+                    </div>
+                    <div class="col span-2-of-3">
+                        <input type="email" name="email" id="email" placeholder="Your email" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col span-1-of-3">
+                        <label for="find-us">How did you find us?</label>
+                    </div>
+                    <div class="col span-2-of-3">
+                        <select name="find-us" id="find-us">
+                            <option value="friends" selected>Friends</option>
+                            <option value="search">Tournaments</option>
+                            <option value="ad">Advertisement</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col span-1-of-3">
+                        <label>Drop us a line</label>
+                    </div>
+                    <div class="col span-2-of-3">
+                        <textarea name="message" placeholder="Your message"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col span-1-of-3">
+                        <label>&nbsp;</label>
+                    </div>
+                    <div class="col span-2-of-3">
+                        <input type="submit" value="Send it!">
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="row">
+            <div class="col span-1-of-2">
+                <ul class="footer-nav">
+                    <li><a href="#">About us</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Press</a></li>
+                </ul>
+            </div>
+            <div class="col span-1-of-2">
+                <ul class="social-links">
+                    <li><a href="#"><i class="ion-social-facebook"></i></a></li>
+                    <li><a href="#"><i class="ion-social-twitter"></i></a></li>
+                    <li><a href="#"><i class="ion-social-googleplus"></i></a></li>
+                    <li><a href="#"><i class="ion-social-instagram"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <p>
+                Copyright &copy; 2016 by MIPPA. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
+    <script src="//cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.jsdelivr.net/selectivizr/1.0.3b/selectivizr.min.js"></script>
+    <script src="~/vendors/js/jquery.waypoints.min.js"></script>
+    <script src="~/resources/js/script.js"></script>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-61026110-2', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>

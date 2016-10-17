@@ -1,0 +1,20 @@
+<div>
+  <button class="btn btn-primary" (click)="onAdd()" [disabled]="addingSession || editingSession">Add Session</button>
+  <div class="list-group">
+    <div *ngIf="!addingSession && !editingSession">
+      <cp-session-item 
+        *ngFor="let session of sessions; let i = index" 
+        [session]="session" 
+        [sessionId]="i"
+        (onEditingSession)="onEditingSession($event)"></cp-session-item>
+    </div>
+    <div *ngIf="addingSession">
+      <div class="list-group-item">
+        <cp-session-edit 
+          [session]="newSession"
+          (onSessionSaved)="onSessionSaved($event)"
+          (onSessionCancel)="onSessionCancel()"></cp-session-edit>
+      </div>
+    </div>    
+  </div>
+</div>

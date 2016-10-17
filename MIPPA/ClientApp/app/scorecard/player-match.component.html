@@ -1,0 +1,127 @@
+﻿<div *ngIf="scorecardState == 1">
+    <button class="btn btn-primary" (click)="addTable()" [disabled]="!started">Add Table</button>
+    <button class="btn btn-primary" (click)="showAllMatches()" [disabled]="!started"><span *ngIf="!allMatches">Show All Matches</span><span *ngIf="allMatches">Show Tables</span></button>
+</div>
+<div class="row" *ngIf="scorecardState == 2">
+    <div class="col-md-12">
+        <p><strong>Congratulations! </strong>All match scores are saved in the system.  Consider reviewing matches with the opposing team to change scores before you commit.</p>
+        <button class="btn btn-success" (click)="finalizeMatch()">Complete Scorecard</button>
+        <button class="btn btn-warning" (click)="showAllMatches()">Review Matches</button>
+    </div>
+</div>
+<br />
+
+<div [hidden]="playedMatches.length == 0 || allMatches">
+    <div class="row border-shadow-grey" *ngFor="let match of playedMatches; let i = index">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Table {{i+1}}</h4>
+                <div class="alert alert-danger" [hidden]="!match.validationError">
+                    <strong>Error!</strong> Scores do not match on server!  Please save again.
+                </div>
+                <div [hidden]="!editMode" class="pull-right">
+                    <button class="btn btn-success" (click)="saveScores(match)" [disabled]="spinnerMatch || (match.homePlayerScore == 0 && match.awayPlayerScore == 0)">
+                        <i class="fa fa-2x"
+                           [class.fa-floppy-o]="!spinnerMatch"
+                           [class.fa-spinner]="spinnerMatch"
+                           [class.fa-pulse]="spinnerMatch">
+                        </i>
+                    </button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <br />
+        <div class="row border-shadow">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <span>{{match.homePlayer.name}}</span> <strong [hidden]="!match.homeBreaking">(B)</strong>
+                        <h5>Hdcp: {{match.homePlayer.handicap}}</h5>
+                    </div>
+                    <div class="scoring col-sm-6 text-center">
+                        <i class="glyphicon glyphicon-minus btn btn-warning" (click)="decrementScore(match, true)"></i>
+                        <span>{{match.homePlayerScore}}</span>
+                        <i class="glyphicon glyphicon-plus btn btn-success" (click)="incrementScore(match, true)"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row border-shadow">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <span>{{match.awayPlayer.name}}</span> <strong [hidden]="match.homeBreaking">(B)</strong>
+                        <h5>Hdcp: {{match.awayPlayer.handicap}}</h5>
+                    </div>
+                    <div class="scoring col-sm-6 text-center">
+                        <i class="glyphicon glyphicon-minus btn btn-warning" (click)="decrementScore(match, false)"></i>
+                        <span>{{match.awayPlayerScore}}</span>
+                        <i class="glyphicon glyphicon-plus btn btn-success" (click)="incrementScore(match, false)"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div>
+                    <h4>On Deck:</h4>
+                    <p *ngFor="let match of onDeckMatches">{{match.homePlayer.name}} vs. {{match.awayPlayer.name}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div [hidden]="matches.length == 0 || !allMatches">
+    <div class="row border-shadow-grey" *ngFor="let match of matches; let i = index">
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Match {{i+1}}</h4>
+                <div class="alert alert-danger" [hidden]="!match.validationError">
+                    <strong>Error!</strong> Scores do not match on server!  Please save again.
+                </div>
+                <div [hidden]="!editMode" class="pull-right">
+                    <button class="btn btn-success" (click)="saveScores(match)" [disabled]="spinnerMatch || (match.homePlayerScore == 0 && match.awayPlayerScore == 0)">
+                        <i class="fa fa-2x"
+                           [class.fa-floppy-o]="!spinnerMatch"
+                           [class.fa-spinner]="spinnerMatch"
+                           [class.fa-pulse]="spinnerMatch">
+                        </i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row border-shadow">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <span>{{match.homePlayer.name}}</span> <strong [hidden]="!match.homeBreaking">(B)</strong>
+                        <h5>Hdcp: {{match.homePlayer.handicap}}</h5>
+                    </div>
+                    <div class="scoring col-sm-6 text-center">
+                        <i class="glyphicon glyphicon-minus btn btn-warning" (click)="decrementScore(match, true)"></i>
+                        <span>{{match.homePlayerScore}}</span>
+                        <i class="glyphicon glyphicon-plus btn btn-success" (click)="incrementScore(match, true)"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row border-shadow">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <span>{{match.awayPlayer.name}}</span> <strong [hidden]="match.homeBreaking">(B)</strong>
+                        <h5>Hdcp: {{match.awayPlayer.handicap}}</h5>
+                    </div>
+                    <div class="scoring col-sm-6 text-center">
+                        <i class="glyphicon glyphicon-minus btn btn-warning" (click)="decrementScore(match, false)"></i>
+                        <span>{{match.awayPlayerScore}}</span>
+                        <i class="glyphicon glyphicon-plus btn btn-success" (click)="incrementScore(match, false)"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

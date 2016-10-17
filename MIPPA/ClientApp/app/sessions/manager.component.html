@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-pills">
+            <li role="presentation" routerLinkActive="active">
+                <a [routerLink]="['teams']">Teams</a>
+            </li>
+            <li role="presentation" routerLinkActive="active">
+                <a [routerLink]="['schedule']">Schedule</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <router-outlet></router-outlet>
+    </div>
+</div>

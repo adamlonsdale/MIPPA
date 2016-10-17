@@ -1,0 +1,43 @@
+<form (ngSubmit)="onSubmit(f.value)" #f="ngForm" [hidden]="!session">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input 
+      type="text" 
+      id="name" 
+      class="form-control"
+      required
+      [ngModel]="session?.name"
+      name="name" />
+  </div>
+  <div class="form-group">
+    <label for="format">Format</label>
+    <select 
+      id="format" 
+      class="form-control"
+      required
+      [ngModel]="session?.format"
+      name="format">
+      <option [value]="0">8-Ball</option>
+      <option [value]="1">9-Ball</option>
+      <option [value]="2">8-Ball and 9-Ball</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="matchup">Matchup</label>
+    <select 
+      id="matchup" 
+      class="form-control"
+      required
+      [ngModel]="session?.matchupType"
+      name="matchup">
+      <option [value]="0">3 on 3</option>
+      <option [value]="1">4 on 4</option>
+      <option [value]="3">5 on 4</option>
+      <option [value]="2">5 on 5</option>
+    </select>
+  </div>
+  <div>
+    <button class="btn btn-success" type="submit" [disabled]="!f.valid">Save</button>
+    <button class="btn btn-default" type="button" (click)="onCancel()">Cancel</button>
+  </div>
+</form>
