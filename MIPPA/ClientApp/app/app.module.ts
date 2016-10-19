@@ -12,6 +12,7 @@ import { ScorecardService } from './scorecard/scorecard.service';
 
 import { AppComponent } from './app.component';
 import { SessionsComponent } from './sessions/sessions.component';
+import { HandicapsComponent } from './sessions/handicaps/handicaps.component';
 import { TeamsComponent } from './sessions/teams/teams.component';
 import { SessionListComponent } from './sessions/session-list/session-list.component';
 import { SessionItemComponent } from './sessions/session-list/session-item.component';
@@ -41,7 +42,8 @@ import { ScorecardComponent } from './scorecard/scorecard.component';
         TeamComponent,
         PlayerEditComponent,
         ScorecardComponent,
-        PlayerMatchComponent
+        PlayerMatchComponent,
+        HandicapsComponent
     ],
     imports: [
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
