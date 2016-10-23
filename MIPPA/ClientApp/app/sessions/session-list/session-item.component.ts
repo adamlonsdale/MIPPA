@@ -30,13 +30,13 @@ export class SessionItemComponent implements OnInit {
   }
 
   getFormat() {
-    if (this.session.format == "0") {
+    if (this.session.format == 0) {
       return "8-Ball";
     }
-    else if (this.session.format == "1") {
+    else if (this.session.format == 1) {
       return "9-Ball";
     }
-    else if (this.session.format == "2") {
+    else if (this.session.format == 2) {
       return "8-Ball and 9-Ball";
     }
   }

@@ -25,5 +25,17 @@ namespace Mippa.Controllers.Api
         {
             return _repository.GetStatisticsForSession(sessionId, format);
         }
+
+        [HttpGet("{sessionId}", Name = "GetSession")]
+        public Session GetById(int sessionId)
+        {
+            var session = _repository.GetSession(sessionId);
+
+            if (session == null)
+            {
+                return null;
+            }
+            return session;
+        }
     }
 }

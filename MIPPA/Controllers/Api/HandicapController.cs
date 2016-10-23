@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mippa.ViewModels;
 using Mippa.Models;
+using MIPPA.ViewModels;
 
 namespace Mippa.Controllers.Api
 {
@@ -27,5 +28,12 @@ namespace Mippa.Controllers.Api
 
             return new JsonResult("Success");
         }
+
+        [HttpGet("{sessionId}")]
+        public IEnumerable<HandicapViewModel> GetHandicapViewModels(int sessionId)
+        {
+            return _repository.GetHandicapViewModelsForSession(sessionId);
+        }
+
     }
 }

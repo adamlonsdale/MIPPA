@@ -28,24 +28,6 @@ namespace Mippa.Controllers.Api
         }
 
         /// <summary>
-        /// Obtain a specific Session by SessionId based on a ManagerId
-        /// </summary>
-        /// <param name="managerId">The primary key of the Manager</param>
-        /// <param name="sessionId"></param>
-        /// <returns>ObjectResult of Manager</returns>
-        [HttpGet("{managerId}/{sessionId}", Name = "GetSession")]
-        public IActionResult GetById(int managerId, int sessionId)
-        {
-            var session = _repository.GetSession(sessionId, managerId);
-
-            if (session == null)
-            {
-                return NotFound();
-            }
-            return new ObjectResult(session);
-        }
-
-        /// <summary>
         /// Creates a new Session under a league Manager
         /// </summary>
         /// <param name="session">Client-side Session</param>
@@ -76,7 +58,7 @@ namespace Mippa.Controllers.Api
                 return BadRequest();
             }
 
-            var sessionToUpdate = _repository.GetSession(sessionId, session.ManagerId);
+            var sessionToUpdate = _repository.GetSession(sessionId);
 
             if (sessionToUpdate == null)
             {

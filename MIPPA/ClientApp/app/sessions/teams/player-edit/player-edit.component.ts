@@ -22,7 +22,7 @@ export class PlayerEditComponent implements OnInit {
 
   onSubmit(value: any) {
     this.onSubmitPlayer.emit(
-      new Player(value.name, value.handicap)
+      new Player(0, value.name, value.handicap)
     );
   }
 

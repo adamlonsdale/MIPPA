@@ -5,7 +5,7 @@
       <cp-session-item 
         *ngFor="let session of sessions; let i = index" 
         [session]="session" 
-        [sessionId]="i"
+        [sessionId]="session.sessionId"
         (onEditingSession)="onEditingSession($event)"></cp-session-item>
     </div>
     <div *ngIf="addingSession">

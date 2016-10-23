@@ -26,7 +26,7 @@ export class SessionListComponent implements OnInit {
   }
 
   onAdd() {
-    this.newSession = new Session('', '', '', [], null);
+    this.newSession = new Session(0, '', 0, '', [], null);
     this.addingSession = true;
   }
 

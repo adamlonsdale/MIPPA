@@ -24,8 +24,11 @@ export class SessionsService {
     }
 
     getSession(sessionId: number) {
-        if (this.sessions.length >= sessionId + 1) {
-            return this.sessions[sessionId];
+        if (this.sessions.length >= 0) {
+            return this.sessions.filter(session => session.sessionId == sessionId)[0];
+        }
+        else {
+
         }
         return null;
     }
@@ -71,6 +74,22 @@ export class SessionsService {
             .toPromise()
             .then(res => <any[]>res.json())
             .then(data => { return data; });
+    }
+
+    updateAllHandicapsForPlayerOnTeam(sessionId: number, playerId: number, handicap: number) {
+        var session = this.getSession(sessionId);
+
+        if (session != null) {
+            for (let team of session.teams) {
+                for (let player of team.players) {
+                    if (player.playerId == playerId) {
+                        player.handicap = handicap;
+                    }
+                }
+            }
+        }
+
+        this.sessionsChanged.emit(this.sessions);
     }
 
 }

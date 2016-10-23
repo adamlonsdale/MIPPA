@@ -1,0 +1,95 @@
+<div class="row">
+    <div class="col-md-12">
+        <div *ngIf="eightBallStatistics != undefined && (session.format == 0 || session.format == 2)">
+            <h3>8-Ball Team Standings</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Place</th>
+                        <th>Name</th>
+                        <th>Total Wins</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let teamStat of eightBallStatistics.teamStatistics; let i = index">
+                        <td>{{i+1}}</td>
+                        <td>{{teamStat.name}}</td>
+                        <td>{{teamStat.totalWins}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div *ngIf="eightBallStatistics != undefined && (session.format == 0 || session.format == 2)">
+            <h3>8-Ball Player Standings</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Place</th>
+                        <th>Name</th>
+                        <th>Total Wins</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let playerStat of eightBallStatistics.playerStatistics; let i = index">
+                        <td>{{i+1}}</td>
+                        <td>{{playerStat.name}}</td>
+                        <td>{{playerStat.totalWins}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div *ngIf="nineBallStatistics != undefined && (session.format == 1 || session.format == 2)">
+            <h3>9-Ball Team Standings</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Place</th>
+                        <th>Name</th>
+                        <th>Total Wins</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let teamStat of nineBallStatistics.teamStatistics; let i = index">
+                        <td>{{i+1}}</td>
+                        <td>{{teamStat.name}}</td>
+                        <td>{{teamStat.totalWins}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div *ngIf="nineBallStatistics != undefined && (session.format == 1 || session.format == 2)">
+            <h3>9-Ball Player Standings</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Place</th>
+                        <th>Name</th>
+                        <th>Total Wins</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let playerStat of nineBallStatistics.playerStatistics; let i = index">
+                        <td>{{i+1}}</td>
+                        <td>{{playerStat.name}}</td>
+                        <td>{{playerStat.totalWins}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

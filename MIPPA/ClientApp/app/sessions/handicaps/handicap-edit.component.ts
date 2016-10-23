@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { HandicapsService } from './handicaps.service';
@@ -9,15 +9,16 @@ import { Session } from '../../model/session';
 import { Subscription } from 'rxjs/Rx';
 
 @Component({
-    selector: 'cp-handicaps',
-    template: require('./handicaps.component.html')
+    selector: '[handicapTr]',
+    template: require('./handicap-edit.component.html')
 })
-export class HandicapsComponent implements OnInit, OnDestroy {
+export class HandicapEditComponent implements OnInit {
     private subscription: Subscription;
     sessionId: number;
     session: Session;
+    editing: boolean;
 
-    viewModels: any = [];
+    @Input('handicapTr') viewModel: any;
 
     constructor(
         private router: Router,
@@ -31,18 +32,19 @@ export class HandicapsComponent implements OnInit, OnDestroy {
                 this.activatedRoute.parent.params.subscribe(
                     (params: any) => {
                         this.sessionId = +params['sessionId']
-
                         this.session = this.sessionsService.getSession(this.sessionId);
-
-                        this.handicapsService.getHandicapsForSession(this.sessionId)
-                            .subscribe(
-                            data => this.viewModels = data);
                     }
-            );
+                );
     }
 
-    ngOnDestroy() {
-        this.subscription.unsubscribe();
+    onEditClick(playerId: number) {
+        if (this.editing) {
+            this.handicapsService.updateHandicapForPlayer(this.sessionId, playerId, this.viewModel.handicap).subscribe();
+            this.sessionsService.updateAllHandicapsForPlayerOnTeam(this.sessionId, playerId, this.viewModel.handicap);
+
+        }
+
+        this.editing = !this.editing;
     }
 
 }

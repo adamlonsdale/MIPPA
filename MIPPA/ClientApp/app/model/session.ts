@@ -3,8 +3,9 @@ import { ScheduleViewModel } from '../viewmodel/schedule/schedule-view-model';
 
 export class Session {
     constructor(
+        public sessionId: number,
         public name: string, 
-        public format: string, 
+        public format: number, 
         public matchupType: string, 
         public teams: Team[], 
         public schedules: any[]) {}

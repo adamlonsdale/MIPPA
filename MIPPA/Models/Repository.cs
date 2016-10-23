@@ -22,6 +22,41 @@ namespace Mippa.Models
             _logger = logger;
         }
 
+        public IEnumerable<HandicapViewModel> GetHandicapViewModelsForSession(int sessionId)
+        {
+            var playerIds =
+                _context.TeamRosters
+                .Include(x => x.Team)
+                .Include(x => x.Player)
+                .Where(x => x.Team.SessionId == sessionId)
+                .Select(x => x.PlayerId).Distinct();
+
+
+            var playersInSession =
+                GetAllPlayersFromSession(sessionId).Select(
+                    x =>
+                    new HandicapViewModel
+                    {
+                        Name = x.Player.Name,
+                        PlayerId = x.PlayerId,
+                        Handicap = x.Handicap
+                    }
+                    ).ToList();
+
+            var playerStatisticsInSession =
+                GetStatisticsForSession(sessionId, Format.EightBall);
+
+            foreach (var playerStat in playerStatisticsInSession.PlayerStatistics)
+            {
+                var player = playersInSession.Single(x => x.PlayerId == playerStat.PlayerId);
+
+                player.Plays = playerStat.PlayCount;
+                player.ProjectedHandicap = playerStat.ProjectedHandicap.ToString("#.##");
+            }
+
+            return playersInSession.AsEnumerable();
+        }
+
         public void FinalizeMatch(int scorecardId)
         {
             var scorecard = _context.Scorecards.SingleOrDefault(x => x.ScorecardId == scorecardId);
@@ -224,6 +259,7 @@ namespace Mippa.Models
                 {
                     sessionPlayerResultsDictionary[playerResult.Player].TotalScore += playerResult.Score;
                     sessionPlayerResultsDictionary[playerResult.Player].TotalWins += playerResult.Wins;
+                    sessionPlayerResultsDictionary[playerResult.Player].PlayCount ++;
                 }
                 else
                 {
@@ -232,15 +268,29 @@ namespace Mippa.Models
                         new PlayerStatisticsViewModel
                         {
                             Name = playerResult.Player.Name,
+                            PlayerId = playerResult.PlayerId,
                             TotalScore = playerResult.Score,
-                            TotalWins = playerResult.Wins
+                            TotalWins = playerResult.Wins,
+                            PlayCount = playerResult.PlayCount,
+                            ProjectedHandicap = 0.0
                         });
                 }
+            }
+
+            foreach (var result in sessionPlayerResultsDictionary.Values)
+            {
+                result.ProjectedHandicap = result.TotalScore / (double)result.PlayCount;
+                result.ProjectedHandicap = result.ProjectedHandicap /
+                    (session.MatchupType == MatchupType.FiveOnFive ? 5.0 :
+                    session.MatchupType == MatchupType.FiveOnFour ? 5.0 :
+                    session.MatchupType == MatchupType.FourOnFour ? 4.0 :
+                    3.0);
             }
 
             var sortedPlayerResults =
                 sessionPlayerResultsDictionary
                 .OrderByDescending(r => r.Value.TotalWins)
+                .ThenByDescending(r => r.Value.TotalScore)
                 .Select(r => r.Value)
                 .ToList();
 
@@ -1139,16 +1189,9 @@ namespace Mippa.Models
             _context.SaveChanges();
         }
 
-        public Session GetSession(int sessionId, int managerId)
+        public Session GetSession(int sessionId)
         {
-            var manager = _context.Managers.Include(x => x.Sessions).SingleOrDefault(y => y.ManagerId == managerId);
-
-            if (manager == null)
-            {
-                return null;
-            }
-
-            var session = manager.Sessions.SingleOrDefault(x => x.SessionId == sessionId);
+            var session = _context.Sessions.SingleOrDefault(x => x.SessionId == sessionId);
 
             if (session == null)
             {
@@ -1647,6 +1690,7 @@ namespace Mippa.Models
         {
             var playersInSession =
                 _context.TeamRosters
+                .Include(x => x.Team)
                 .Include(x => x.Player)
                 .Where(x => x.Team.SessionId == sessionId)
                 .OrderBy(x => x.Player.Name)

@@ -20,7 +20,7 @@ export class TeamComponent implements OnInit {
   selectedPlayer: Player;
 
   constructor(private sessionsService: SessionsService) {
-    this.newPlayer = new Player('', 0);
+    this.newPlayer = new Player(0, '', 0);
    }
 
   ngOnInit() {

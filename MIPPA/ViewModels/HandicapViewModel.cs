@@ -8,8 +8,9 @@ namespace MIPPA.ViewModels
     public class HandicapViewModel
     {
         public string Name { get; set; }
+        public int PlayerId { get; set; }
         public int Handicap { get; set; }
         public int Plays { get; set; }
-        public double ProjectedHandicap { get; set; }
+        public string ProjectedHandicap { get; set; }
     }
 }

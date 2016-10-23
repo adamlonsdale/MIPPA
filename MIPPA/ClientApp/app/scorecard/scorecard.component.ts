@@ -36,7 +36,6 @@ export class ScorecardComponent implements OnInit {
     constructor(private scorecardService: ScorecardService, private activatedRoute: ActivatedRoute, private router: Router) {
         this.viewModel = new ScoreCardViewModel();
         this.scorecardId = -1;
-        this.matches = new Array<PlayerMatchViewModel>();
         this.teamResults = new TeamResultsViewModel();
         this.playersWithNoHandicap = new Array<PlayerViewModel>();
     }
@@ -188,6 +187,8 @@ export class ScorecardComponent implements OnInit {
     }
 
     private displayMatches() {
+        this.matches = new Array<PlayerMatchViewModel>();
+
         for (let round of this.viewModel.rounds) {
             for (let match of round.playerMatches) {
                 this.matches.push(match);

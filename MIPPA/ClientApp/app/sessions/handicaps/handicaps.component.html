@@ -1,1 +1,15 @@
-﻿<h4>Testing</h4>
+﻿<table class="table table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Handicap</th>
+            <th>Plays</th>
+            <th>ProjectedHandicap</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let viewModel of viewModels" [handicapTr]="viewModel">
+        </tr>
+    </tbody>
+</table>

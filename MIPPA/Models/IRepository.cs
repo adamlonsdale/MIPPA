@@ -26,6 +26,7 @@ namespace Mippa.Models
         void CalculatePlayerResults(int scorecardId);
         TeamResultsViewModel CalculateTeamResults(int scorecardId, bool saveResults);
         void UpdatePlayerScores(PlayerMatchViewModel viewModel, out int homePlayerScore, out int awayPlayerScore, out int scorecardState);
+        IEnumerable<HandicapViewModel> GetHandicapViewModelsForSession(int sessionId);
         ScorecardViewModel GetScorecardInformation(int scorecardId);
         ScorecardViewModel GetScorecardInformation_Initial(int scorecardId);
         PlayerResultsViewModel GetPlayerResults(int scorecardId);
@@ -50,7 +51,7 @@ namespace Mippa.Models
         #region Sessions
 
         void AddSession(Session session, int managerId);
-        Session GetSession(int sessionId, int managerId);
+        Session GetSession(int sessionId);
         IEnumerable<Session> GetAllSessions(int managerId);
         void UpdateSession(Session session);
         Session RemoveSession(int id);

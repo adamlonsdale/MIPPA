@@ -9,6 +9,8 @@ import { TeamsService } from './sessions/teams/teams.service';
 import { ScheduleService } from './sessions/schedule/schedule.service';
 import { LoginService } from './login/login.service';
 import { ScorecardService } from './scorecard/scorecard.service';
+import { HandicapsService } from './sessions/handicaps/handicaps.service';
+import { StatsService } from './sessions/statistics/stats.service';
 
 import { AppComponent } from './app.component';
 import { SessionsComponent } from './sessions/sessions.component';
@@ -23,6 +25,8 @@ import { TeamComponent } from './sessions/teams/team.component';
 import { PlayerEditComponent } from './sessions/teams/player-edit/player-edit.component';
 import { LoginComponent } from './login/login.component';
 import { PlayerMatchComponent } from './scorecard/player-match.component';
+import { HandicapEditComponent } from './sessions/handicaps/handicap-edit.component';
+import { StatsComponent } from './sessions/statistics/stats.component';
 
 // Autocomplete
 import { AutoCompleteModule } from 'primeng/primeng';
@@ -43,7 +47,9 @@ import { ScorecardComponent } from './scorecard/scorecard.component';
         PlayerEditComponent,
         ScorecardComponent,
         PlayerMatchComponent,
-        HandicapsComponent
+        HandicapsComponent,
+        HandicapEditComponent,
+        StatsComponent
     ],
     imports: [
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
@@ -51,7 +57,7 @@ import { ScorecardComponent } from './scorecard/scorecard.component';
         FormsModule,
         AutoCompleteModule
     ],
-    providers: [SessionsService, TeamsService, ScheduleService, LoginService, ScorecardService],
+    providers: [SessionsService, TeamsService, ScheduleService, LoginService, ScorecardService, HandicapsService, StatsService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
