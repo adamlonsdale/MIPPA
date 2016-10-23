@@ -44,10 +44,15 @@ export class LoginService {
                     loginViewModel.type == "team") {
 
                     if (loginViewModel.mode == 'edit') {
-                        this.router.navigate(['/', 'app', 'scorecard', loginViewModel.id], { queryParams: { 'edit': 'true' } });
+                        if (loginViewModel.numberOfTables == 0) {
+                            this.router.navigate(['/', 'app', 'scorecard', loginViewModel.id], { queryParams: { 'edit': 'true' } });
+                        }
+                        else {
+                            this.router.navigate(['/', 'app', 'scorecard', loginViewModel.id], { queryParams: { 'edit': 'true', 'numTables': loginViewModel.numberOfTables } });
+                        }
                     }
                     else if (loginViewModel.mode == 'view') {
-                        this.router.navigate(['/', 'app', 'scorecard', loginViewModel.id], { queryParams: { 'view': 'true' } });
+                        this.router.navigate(['/', 'app', 'scorecard', loginViewModel.id], { queryParams: { 'view': 'true', 'numTables': loginViewModel.numberOfTables } });
                     }
                 } else {
                     this.loginChanged.emit(loginViewModel);

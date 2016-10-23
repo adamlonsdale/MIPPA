@@ -14,5 +14,7 @@ namespace MIPPA.ViewModels
         public bool Valid { get; set; }
         public int Id { get; set; }
         public string ServerDate { get; set; }
+        public string Message { get; set; }
+        public int NumberOfTables { get; set; }
     }
 }

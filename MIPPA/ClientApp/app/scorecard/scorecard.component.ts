@@ -15,9 +15,10 @@ import { Subscription } from 'RxJs/rx';
     template: require('./scorecard.component.html'),
     styles: [require('./scorecard.component.css')]
 })
-export class ScorecardComponent implements OnInit {
+export class ScorecardComponent implements OnInit, OnDestroy {
     @ViewChild(PlayerMatchComponent) child: PlayerMatchComponent;
     private subscription: Subscription;
+    private subscription2: Subscription;
 
     viewModel: ScoreCardViewModel;
     lineup: Lineup;
@@ -32,6 +33,8 @@ export class ScorecardComponent implements OnInit {
     playersWithNoHandicap: Array<PlayerViewModel>;
     editMode: Boolean;
     enteringLineup: Boolean;
+    numberOfTables: number = 1;
+    tablesSubmitted: boolean = false;
 
     constructor(private scorecardService: ScorecardService, private activatedRoute: ActivatedRoute, private router: Router) {
         this.viewModel = new ScoreCardViewModel();
@@ -42,6 +45,11 @@ export class ScorecardComponent implements OnInit {
 
     onOtherScorecard() {
         this.router.navigate(['/', 'app', 'scorecard', this.viewModel.otherScorecardId], { preserveQueryParams: true });
+    }
+
+    startLineup(something: any) {
+        this.viewModel.numberOfTables = something.numberOfTables;
+        this.tablesSubmitted = true;
     }
 
     finalizeMatch() {
@@ -58,7 +66,6 @@ export class ScorecardComponent implements OnInit {
             .subscribe(
             data => {
                 this.teamResults = data;
-                console.log(this.child);
                 if (this.child != null && this.child != undefined) {
                     this.child.scorecardState = this.teamResults.scorecardState;
                 }
@@ -88,6 +95,7 @@ export class ScorecardComponent implements OnInit {
                     this.loadScorecard();
                 }
             );
+        
     }
 
     loadScorecard() {
@@ -119,6 +127,15 @@ export class ScorecardComponent implements OnInit {
                     this.checkHandicaps();
                 }
 
+                this.subscription2 =
+                    this.activatedRoute
+                        .queryParams
+                        .subscribe(queryParam => {
+                            if (queryParam.hasOwnProperty('numTables')) {
+                                this.numberOfTables = +queryParam['numTables'];
+                            }
+                        });
+
             });
 
         this.getTeamResults();
@@ -128,6 +145,7 @@ export class ScorecardComponent implements OnInit {
 
     ngOnDestroy() {
         this.subscription.unsubscribe();
+        this.subscription2.unsubscribe();
     }
 
     checkHandicaps() {
@@ -179,9 +197,9 @@ export class ScorecardComponent implements OnInit {
 
                         this.displayMatches();
 
-                        this.child.loadQueue();
-
                         this.enteringLineup = false;
+
+                        this.router.navigate(['/', 'app', 'scorecard', this.scorecardId], { queryParams: { 'edit': 'true', 'numTables': this.viewModel.numberOfTables } });
                     });
             });
     }
@@ -235,6 +253,7 @@ class ScoreCardViewModel {
     format: number;
     matchupType: number;
     otherScorecardId: number;
+    numberOfTables: number;
 
     constructor() {
         this.homePlayers = new Array<PlayerViewModel>();

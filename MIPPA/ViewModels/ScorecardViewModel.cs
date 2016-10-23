@@ -15,5 +15,6 @@ namespace Mippa.ViewModels
         public ICollection<RoundViewModel> Rounds { get; set; }
         public MatchupType MatchupType { get; set; }
         public int OtherScorecardId { get; set; }
+        public int NumberOfTables { get; set; }
     }
 }

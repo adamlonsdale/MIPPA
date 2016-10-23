@@ -17,7 +17,7 @@ export class PlayerMatchComponent implements OnInit {
     queuedMatches: Array<PlayerMatchViewModel>;
     playedMatches: Array<PlayerMatchViewModel>;
     skippedMatches: Array<PlayerMatchViewModel>;
-    numberOfTables: number;
+    @Input() numberOfTables: number;
     started: Boolean;
     onDeckMatches: Array<PlayerMatchViewModel>;
     allMatches: Boolean;
@@ -32,7 +32,6 @@ export class PlayerMatchComponent implements OnInit {
         this.queuedMatches = new Array<PlayerMatchViewModel>();
         this.skippedMatches = new Array<PlayerMatchViewModel>();
         this.onDeckMatches = new Array<PlayerMatchViewModel>();
-        this.numberOfTables = 0;
     }
 
     ngOnInit() {
@@ -48,11 +47,6 @@ export class PlayerMatchComponent implements OnInit {
     }
 
     addTable() {
-        console.log('Add table clicked');
-
-        // Always get the next match in the queue
-        this.numberOfTables++;
-
         if (this.queuedMatches.length > 0) {
             this.playedMatches.push(this.queuedMatches[0]);
             this.queuedMatches.splice(0, 1);
@@ -77,13 +71,11 @@ export class PlayerMatchComponent implements OnInit {
             this.queuedMatches.push(match);
         }
 
-        console.log('Number of matches available: ' + nonSavedMatches.length)
-
-        //if (nonSavedMatches.length == 0) {
-        //    this.canSave = true;
-        //}
-
         this.started = true;
+
+        for (var i = 0; i < this.numberOfTables; i++) {
+            this.addTable();
+        }
     }
 
     onDeck() {

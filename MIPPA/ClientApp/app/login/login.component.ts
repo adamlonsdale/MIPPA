@@ -39,4 +39,6 @@ class LoginViewModel {
     type: string;
     valid: boolean;
     id: number;
+    message: string;
+    numberOfTables: number;
 }

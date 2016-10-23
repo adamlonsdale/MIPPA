@@ -20,7 +20,7 @@
                required
                [ngModel]="password"
                name="password">
-        <div class="alert alert-danger" *ngIf="!loginViewModel?.valid"><strong>Error: </strong>Username and/or password is invalid or scorecard is not scheduled for today.</div>
+        <div class="alert alert-danger" *ngIf="!loginViewModel?.valid"><strong>Error: </strong>{{loginViewModel.message}}</div>
         <button 
                 class="btn btn-lg btn-primary btn-block" 
                 type="submit" 

@@ -1,8 +1,4 @@
-﻿<div *ngIf="scorecardState == 1">
-    <button class="btn btn-primary" (click)="addTable()" [disabled]="!started">Add Table</button>
-    <button class="btn btn-primary" (click)="showAllMatches()" [disabled]="!started"><span *ngIf="!allMatches">Show All Matches</span><span *ngIf="allMatches">Show Tables</span></button>
-</div>
-<div class="row" *ngIf="scorecardState == 2">
+﻿<div class="row" *ngIf="scorecardState == 2">
     <div class="col-md-12">
         <p><strong>Congratulations! </strong>All match scores are saved in the system.  Consider reviewing matches with the opposing team to change scores before you commit.</p>
         <button class="btn btn-success" (click)="finalizeMatch()">Complete Scorecard</button>

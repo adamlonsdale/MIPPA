@@ -13,6 +13,8 @@ namespace Mippa.Models
         public ScorecardState State { get; set; }
         public Format Format { get; set; }
 
+        public int NumberOfTables { get; set; }
+
         [JsonIgnore]
         public virtual TeamMatch TeamMatch { get; set; }
 

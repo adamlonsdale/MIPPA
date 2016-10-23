@@ -78,6 +78,7 @@ namespace Mippa.Models
                 if (result == null)
                 {
                     viewModel.Id = -1;
+                    viewModel.Message = "Manager not found with e-mail address!";
                 }
                 else
                 {
@@ -94,6 +95,7 @@ namespace Mippa.Models
                 if (result == null)
                 {
                     viewModel.Id = -1;
+                    viewModel.Message = "Team login info supplied is not correct!";
                 }
                 else
                 {
@@ -116,9 +118,13 @@ namespace Mippa.Models
                     {
                         viewModel.Id = -1;
                         viewModel.Valid = false;
+                        viewModel.Message = "There is no scorecard for the supplied team available today!";
                     }
                     else
                     {
+
+                        viewModel.Valid = true;
+
                         // Find the TeamMatch with the TeamId
                         TeamMatch match = null;
 
@@ -135,23 +141,37 @@ namespace Mippa.Models
 
                         if (match != null)
                         {
+                            Scorecard scorecard = null;
+
                             if (match.Scorecards.Count > 1)
                             {
                                 if (dayOfMonth % 2 == 1)
                                 {
-                                    viewModel.Id = match.Scorecards.Single(x=> x.Format == Format.NineBall).ScorecardId;
+                                    scorecard = match.Scorecards.Single(x=> x.Format == Format.NineBall);
                                 }
                                 else
                                 {
-                                    viewModel.Id = match.Scorecards.Single(x => x.Format == Format.EightBall).ScorecardId;
+                                    scorecard = match.Scorecards.Single(x => x.Format == Format.EightBall);
                                 }
                             }
                             else
                             {
-                                viewModel.Id = match.Scorecards.First().ScorecardId;
+                                scorecard = match.Scorecards.First();
                             }
+
+                            if (viewModel.Mode == "view" && scorecard.State == 0)
+                            {
+                                viewModel.Message = "The away team cannot log into scorecard until the home team has started scoring!";
+                                viewModel.Valid = false;
+                            }
+
+                            viewModel.Id = scorecard.ScorecardId;
                             viewModel.Type = "team";
-                            viewModel.Valid = true;
+                            viewModel.NumberOfTables = scorecard.NumberOfTables;
+                        }
+                        else
+                        {
+                            viewModel.Valid = false;
                         }
                     }
 
@@ -782,6 +802,8 @@ namespace Mippa.Models
                     });
             }
 
+            viewModel.NumberOfTables = scorecard.NumberOfTables;
+
             return viewModel;
         }
 
@@ -938,6 +960,8 @@ namespace Mippa.Models
                     matchCounter++;
                 }
             }
+
+            viewModel.NumberOfTables = scorecard.NumberOfTables;
 
             return viewModel;
         }
@@ -1683,6 +1707,7 @@ namespace Mippa.Models
             }
 
             scorecardFromContext.State = ScorecardState.InProgress;
+            scorecardFromContext.NumberOfTables = viewModel.NumberOfTables;
             _context.SaveChanges();
         }
 

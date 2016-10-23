@@ -55,7 +55,8 @@ export class ScorecardService {
                 awayPlayers: scorecardInfo.awayPlayers,
                 state: scorecardInfo.state,
                 format: scorecardInfo.format,
-                matchupType: scorecardInfo.matchupType
+                matchupType: scorecardInfo.matchupType,
+                numberOfTables: scorecardInfo.numberOfTables
             }),
             { headers: this.headers })
             .map(res => res.json());
