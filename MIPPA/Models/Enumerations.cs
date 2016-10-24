@@ -28,4 +28,11 @@ namespace Mippa.Models
         FiveOnFive,
         FiveOnFour
     }
+
+    public enum ResetPreference
+    {
+        Text,
+        Phone,
+        InPerson
+    }
 }

@@ -24,9 +24,12 @@ namespace Mippa.Models
         void FinalizeAllScorecards();
         StatisticsViewModel GetStatisticsForSession(int sessionId, Format format = Format.EightBall);
         void CalculatePlayerResults(int scorecardId);
+        void ResetScorecard(int scorecardId);
         TeamResultsViewModel CalculateTeamResults(int scorecardId, bool saveResults);
         void UpdatePlayerScores(PlayerMatchViewModel viewModel, out int homePlayerScore, out int awayPlayerScore, out int scorecardState);
         IEnumerable<HandicapViewModel> GetHandicapViewModelsForSession(int sessionId);
+        IEnumerable<ResetRequest> GetResetRequestsForSession(int sessionId);
+        void RequestReset(int scorecardId, ResetRequest request);
         ScorecardViewModel GetScorecardInformation(int scorecardId);
         ScorecardViewModel GetScorecardInformation_Initial(int scorecardId);
         PlayerResultsViewModel GetPlayerResults(int scorecardId);

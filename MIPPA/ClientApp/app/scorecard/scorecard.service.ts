@@ -27,6 +27,19 @@ export class ScorecardService {
             .map(res => res.json());
     }
 
+    ResetScorecard(sessionId: number, scorecardId: number) {
+        return this.http.get('/api/resetrequest/' + sessionId + '/' + scorecardId).map(res => res.json());
+    }
+
+    GetResetRequests(sessionId: number) {
+        return this.http.get('/api/resetrequest/' + sessionId).map(res => res.json());
+    }
+
+    RequestReset(scorecardId: number, resetRequest: any) {
+        return this.http.put('api/resetrequest/' + scorecardId, JSON.stringify(resetRequest), { headers: this.headers })
+            .map(res => res.json());
+    }
+
     GetTeamResults(scorecardId: number): Observable<any> {
         return this.http.get('/api/teamresult/' + scorecardId)
             .map(res => res.json());

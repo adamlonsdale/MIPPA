@@ -27,6 +27,7 @@ import { LoginComponent } from './login/login.component';
 import { PlayerMatchComponent } from './scorecard/player-match.component';
 import { HandicapEditComponent } from './sessions/handicaps/handicap-edit.component';
 import { StatsComponent } from './sessions/statistics/stats.component';
+import { ResetComponent } from './scorecard/reset.component';
 
 // Autocomplete
 import { AutoCompleteModule } from 'primeng/primeng';
@@ -49,7 +50,8 @@ import { ScorecardComponent } from './scorecard/scorecard.component';
         PlayerMatchComponent,
         HandicapsComponent,
         HandicapEditComponent,
-        StatsComponent
+        StatsComponent,
+        ResetComponent
     ],
     imports: [
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.

@@ -43,6 +43,10 @@ export class ScorecardComponent implements OnInit, OnDestroy {
         this.playersWithNoHandicap = new Array<PlayerViewModel>();
     }
 
+    onRequestReset() {
+        this.scorecardService.RequestReset(this.scorecardId, { 'name': this.viewModel.homeTeamName, 'scorecardId': this.scorecardId }).subscribe();
+    }
+
     onOtherScorecard() {
         this.router.navigate(['/', 'app', 'scorecard', this.viewModel.otherScorecardId], { preserveQueryParams: true });
     }

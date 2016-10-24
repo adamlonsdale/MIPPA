@@ -22,6 +22,59 @@ namespace Mippa.Models
             _logger = logger;
         }
 
+        public void ResetScorecard(int scorecardId)
+        {
+            var resetRequest =
+                _context.ResetRequests.SingleOrDefault(x => x.ScorecardId == scorecardId);
+
+            if (resetRequest == null)
+            {
+                return;
+            }
+
+            _context.RemoveRange(_context.TeamResults.Where(x => x.ScorecardId == scorecardId).ToList());
+            _context.RemoveRange(_context.PlayerResults.Where(x => x.ScorecardId == scorecardId).ToList());
+            _context.RemoveRange(_context.PlayerMatches.Where(x => x.ScorecardId == scorecardId).ToList());
+            _context.Scorecards.Single(x => x.ScorecardId == scorecardId).State = 0;
+
+            _context.ResetRequests.Remove(resetRequest);
+
+            _context.SaveChanges();
+        }
+
+        public IEnumerable<ResetRequest> GetResetRequestsForSession(int sessionId)
+        {
+            var resetRequests =
+                _context.ResetRequests.Include(x => x.Scorecard).ThenInclude(x => x.TeamMatch).ThenInclude(x => x.Schedule).Where(x => x.Scorecard.TeamMatch.Schedule.SessionId == sessionId);
+
+            if (resetRequests == null)
+            {
+                return null;
+            }
+
+            return resetRequests.AsEnumerable();
+        }
+
+        public void RequestReset(int scorecardId, ResetRequest request)
+        {
+            if (_context.ResetRequests.Any(x => x.ScorecardId == scorecardId))
+            {
+                var requestFromContext = _context.ResetRequests.Single(x => x.ScorecardId == scorecardId);
+
+                requestFromContext.Name = request.Name;
+                requestFromContext.PhoneNumber = request.PhoneNumber;
+                requestFromContext.Preference = request.Preference;
+            }
+            else
+            {
+                request.ResetRequestId = 0;
+                _context.ResetRequests.Add(request);
+            }
+
+            _context.SaveChanges();
+
+        }
+
         public IEnumerable<HandicapViewModel> GetHandicapViewModelsForSession(int sessionId)
         {
             var playerIds =
