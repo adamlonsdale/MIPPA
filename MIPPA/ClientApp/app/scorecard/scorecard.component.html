@@ -51,47 +51,13 @@
     </div>
     <div class="row">
         <div class="col-xs-6">
-            <button class="btn btn-sm btn-danger" [disabled]="viewModel.state == 0" (click)="onRequestReset()">Request Reset</button>
+            <button class="btn btn-sm btn-danger" [disabled]="viewModel.state == 0" (click)="onRequestReset()">Reset Scorecard</button>
         </div>
     </div>
 </div>
 
 <div class="row" *ngIf="scorecardId > 0">
-    <div *ngIf="viewModel.state == 0 && !tablesSubmitted && editMode" class="row">
-        <div class="col-xs-12">
-            <div class="well">
-                <h3>VERY IMPORTANT! 10/23/2016 <span class="text-danger">exp. 10/31/2016</span></h3>
-                <p>The scoring system is now set up as originally intended...</p>
-                <p>No longer ability to see all matches EXCEPT when you have scored each match individually and review in the end...more below</p>
-                <p><strong>FIRST!</strong> You will select how many tables you will play on</p>
-                <p>After entering lineup the number of tables you choose will be stored on the server, this allows anyone using away team credentials to keep track of the tables being played on and who is on deck by periodically refreshing the page on their device.</p>
-                <p>For the home team editing the scorecard, clicking save will pull the on deck match for the table that was saved.</p>
-                <p>You <strong>MUST</strong> save every match to see the Complete Scorecard and Review Matches buttons.</p>
-                <p>You <strong>MUST</strong> click <strong>Complete Scorecard</strong> in order to allow the system to calculate live standings</p>
-                <h4>One Caveat:</h4>
-                <p>The system can't, and probably never will, know if a player has been entered into the lineup where there is an agreement that they will show up late.  It's up to you how you want to manage this in the system.  Possible scenarios, to name a few, are 1.. Hold and once they arrive use paper to catch up .. 2.. Allow home team to exclusively use paper and just enter scorecards after all matches are complete</p>
-                <blockquote>Thank You! -Steve</blockquote>
-            </div>
-        </div>
-        <div class="col-xs-12">
-            <form #selectTables="ngForm" (ngSubmit)="startLineup(selectTables.value)">
-                <div class="form-group">
-                    <label for="numberOfTables">How many tables will you be playing on?</label>
-                    <select 
-                            id="numberOfTables" 
-                            class="form-control" 
-                            [ngModel]="numberOfTables"
-                            name="numberOfTables">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                    </select>
-                </div>
-                <input type="submit" value="Start Lineup" class="btn btn-info" />
-            </form>
-        </div>
-    </div>
-    <div *ngIf="viewModel.state == 0 && editMode && tablesSubmitted">
+    <div *ngIf="viewModel.state == 0">
         <div class="row" *ngIf="!handicapsAreNotSet">
             <div class="col-sm-6">
                 <form class="form-group" #selectHome="ngForm" (ngSubmit)="addPlayerToRoster(true)">
@@ -174,13 +140,12 @@
 
     </div>
     <div *ngIf="viewModel.state > 0 && viewModel.state != 3" class="col-sm-12">
-        <player-match [matches]="matches"
-                      [numberOfTables]="numberOfTables"
-                      [maxScore]="viewModel.format == 0 ? 15 : 1"
-                      [scorecardState]="viewModel.state"
-                      (onSaveScores)="getTeamResults()"
-                      (onFinalizeMatch)="finalizeMatch()">
+        <round [rounds]="viewModel.rounds"
+               [maxScore]="viewModel.format == 0 ? 15 : 1"
+               [scorecardState]="viewModel.state"
+               (onSaveScores)="getTeamResults()"
+               (onFinalizeMatch)="finalizeMatch()">
 
-        </player-match>
+        </round>
     </div>
 </div>

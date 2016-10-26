@@ -20,14 +20,15 @@ namespace MIPPA.Controllers.Api
         }
 
         // GET: api/values
-        [HttpGet("{sessionId}/{scorecardId?}")]
-        public IEnumerable<ResetRequest> Get(int sessionId, int? scorecardId = null)
+        [HttpGet("{scorecardId?}")]
+        public IActionResult Get(int? scorecardId = null)
         {
             if (scorecardId.HasValue)
             {
                 _repository.ResetScorecard(scorecardId.Value);
             }
-            return _repository.GetResetRequestsForSession(sessionId);
+
+            return new JsonResult("Success");
         }
 
         // GET api/values/5

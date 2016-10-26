@@ -24,20 +24,10 @@ namespace Mippa.Models
 
         public void ResetScorecard(int scorecardId)
         {
-            var resetRequest =
-                _context.ResetRequests.SingleOrDefault(x => x.ScorecardId == scorecardId);
-
-            if (resetRequest == null)
-            {
-                return;
-            }
-
             _context.RemoveRange(_context.TeamResults.Where(x => x.ScorecardId == scorecardId).ToList());
             _context.RemoveRange(_context.PlayerResults.Where(x => x.ScorecardId == scorecardId).ToList());
             _context.RemoveRange(_context.PlayerMatches.Where(x => x.ScorecardId == scorecardId).ToList());
             _context.Scorecards.Single(x => x.ScorecardId == scorecardId).State = 0;
-
-            _context.ResetRequests.Remove(resetRequest);
 
             _context.SaveChanges();
         }
@@ -124,115 +114,22 @@ namespace Mippa.Models
 
         public LoginViewModel GetLoginViewModel(LoginViewModel viewModel)
         {
-            if (viewModel.UserName.Contains("@"))
+            var result = _context.Managers.SingleOrDefault(x => x.Email == viewModel.UserName && x.Password == viewModel.Password);
+
+            if (result == null)
             {
-                var result = _context.Managers.SingleOrDefault(x => x.Email == viewModel.UserName && x.Password == viewModel.Password);
-
-                if (result == null)
-                {
-                    viewModel.Id = -1;
-                    viewModel.Message = "Manager not found with e-mail address!";
-                }
-                else
-                {
-                    viewModel.Id = result.ManagerId;
-                    viewModel.Type = "manager";
-                    viewModel.Valid = true;
-                }
-
-                return viewModel;
+                viewModel.Id = -1;
+                viewModel.Valid = false;
+                viewModel.Message = "Manager not found with e-mail address!";
             }
-            else {
-                var result = _context.Teams.SingleOrDefault(x => x.UserName == viewModel.UserName && x.Password == viewModel.Password);
-
-                if (result == null)
-                {
-                    viewModel.Id = -1;
-                    viewModel.Message = "Team login info supplied is not correct!";
-                }
-                else
-                {
-                    // Get the current date time
-
-                    var currentDate = DateTime.Now;
-
-                    var serverDate = string.Format("{0:M/d/yyyy}", currentDate);
-
-                    viewModel.ServerDate = serverDate;
-
-                    // Get just the day of month
-                    var dayOfMonth = currentDate.Day;
-
-                    // Find a schedule with the serverDate in the teams session
-
-                    var matchingSchedule = _context.Schedules.Include(x => x.Matches).ThenInclude(x => x.Scorecards).SingleOrDefault(x => x.Date == serverDate && x.SessionId == result.SessionId);
-
-                    if (matchingSchedule == null)
-                    {
-                        viewModel.Id = -1;
-                        viewModel.Valid = false;
-                        viewModel.Message = "There is no scorecard for the supplied team available today!";
-                    }
-                    else
-                    {
-
-                        viewModel.Valid = true;
-
-                        // Find the TeamMatch with the TeamId
-                        TeamMatch match = null;
-
-                        if (matchingSchedule.Matches.Any(x=>x.HomeTeamId == result.TeamId))
-                        {
-                            match = matchingSchedule.Matches.Single(x => x.HomeTeamId == result.TeamId);
-                            viewModel.Mode = "edit";
-                        }
-                        else if (matchingSchedule.Matches.Any(x => x.AwayTeamId == result.TeamId))
-                        {
-                            match = matchingSchedule.Matches.Single(x => x.AwayTeamId == result.TeamId);
-                            viewModel.Mode = "view";
-                        }
-
-                        if (match != null)
-                        {
-                            Scorecard scorecard = null;
-
-                            if (match.Scorecards.Count > 1)
-                            {
-                                if (dayOfMonth % 2 == 1)
-                                {
-                                    scorecard = match.Scorecards.Single(x=> x.Format == Format.NineBall);
-                                }
-                                else
-                                {
-                                    scorecard = match.Scorecards.Single(x => x.Format == Format.EightBall);
-                                }
-                            }
-                            else
-                            {
-                                scorecard = match.Scorecards.First();
-                            }
-
-                            if (viewModel.Mode == "view" && scorecard.State == 0)
-                            {
-                                viewModel.Message = "The away team cannot log into scorecard until the home team has started scoring!";
-                                viewModel.Valid = false;
-                            }
-
-                            viewModel.Id = scorecard.ScorecardId;
-                            viewModel.Type = "team";
-                            viewModel.NumberOfTables = scorecard.NumberOfTables;
-                        }
-                        else
-                        {
-                            viewModel.Valid = false;
-                        }
-                    }
-
-
-                }
-
-                return viewModel;
+            else
+            {
+                viewModel.Id = result.ManagerId;
+                viewModel.Type = "manager";
+                viewModel.Valid = true;
             }
+
+            return viewModel;
         }
 
         public void FinalizeAllScorecards()

@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { ScorecardService } from './scorecard.service';
 import { PlayerMatchViewModel } from '../viewmodel/scorecard/playermatchviewmodel';
-import { PlayerMatchComponent } from './player-match.component';
+import { RoundComponent } from './round.component';
 
 import { Subscription } from 'RxJs/rx';
 
@@ -16,7 +16,7 @@ import { Subscription } from 'RxJs/rx';
     styles: [require('./scorecard.component.css')]
 })
 export class ScorecardComponent implements OnInit, OnDestroy {
-    @ViewChild(PlayerMatchComponent) child: PlayerMatchComponent;
+    @ViewChild(RoundComponent) child: RoundComponent;
     private subscription: Subscription;
     private subscription2: Subscription;
 
@@ -44,7 +44,8 @@ export class ScorecardComponent implements OnInit, OnDestroy {
     }
 
     onRequestReset() {
-        this.scorecardService.RequestReset(this.scorecardId, { 'name': this.viewModel.homeTeamName, 'scorecardId': this.scorecardId }).subscribe();
+        this.scorecardService.ResetScorecard(this.scorecardId).subscribe(
+        data => this.loadScorecard());
     }
 
     onOtherScorecard() {
@@ -131,15 +132,6 @@ export class ScorecardComponent implements OnInit, OnDestroy {
                     this.checkHandicaps();
                 }
 
-                this.subscription2 =
-                    this.activatedRoute
-                        .queryParams
-                        .subscribe(queryParam => {
-                            if (queryParam.hasOwnProperty('numTables')) {
-                                this.numberOfTables = +queryParam['numTables'];
-                            }
-                        });
-
             });
 
         this.getTeamResults();
@@ -149,7 +141,6 @@ export class ScorecardComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.subscription.unsubscribe();
-        this.subscription2.unsubscribe();
     }
 
     checkHandicaps() {
@@ -203,7 +194,7 @@ export class ScorecardComponent implements OnInit, OnDestroy {
 
                         this.enteringLineup = false;
 
-                        this.router.navigate(['/', 'app', 'scorecard', this.scorecardId], { queryParams: { 'edit': 'true', 'numTables': this.viewModel.numberOfTables } });
+                        this.router.navigate(['/', 'app', 'scorecard', this.scorecardId]);
                     });
             });
     }

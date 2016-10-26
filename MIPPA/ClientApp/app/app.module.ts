@@ -24,10 +24,10 @@ import { ScheduleComponent } from './sessions/schedule/schedule.component';
 import { TeamComponent } from './sessions/teams/team.component';
 import { PlayerEditComponent } from './sessions/teams/player-edit/player-edit.component';
 import { LoginComponent } from './login/login.component';
+import { RoundComponent } from './scorecard/round.component';
 import { PlayerMatchComponent } from './scorecard/player-match.component';
 import { HandicapEditComponent } from './sessions/handicaps/handicap-edit.component';
 import { StatsComponent } from './sessions/statistics/stats.component';
-import { ResetComponent } from './scorecard/reset.component';
 
 // Autocomplete
 import { AutoCompleteModule } from 'primeng/primeng';
@@ -47,11 +47,11 @@ import { ScorecardComponent } from './scorecard/scorecard.component';
         TeamComponent,
         PlayerEditComponent,
         ScorecardComponent,
-        PlayerMatchComponent,
+        RoundComponent,
         HandicapsComponent,
         HandicapEditComponent,
         StatsComponent,
-        ResetComponent
+        PlayerMatchComponent
     ],
     imports: [
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.

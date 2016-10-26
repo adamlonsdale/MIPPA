@@ -27,8 +27,8 @@ export class ScorecardService {
             .map(res => res.json());
     }
 
-    ResetScorecard(sessionId: number, scorecardId: number) {
-        return this.http.get('/api/resetrequest/' + sessionId + '/' + scorecardId).map(res => res.json());
+    ResetScorecard(scorecardId: number) {
+        return this.http.get('/api/resetrequest/' + scorecardId).map(res => res.json());
     }
 
     GetResetRequests(sessionId: number) {

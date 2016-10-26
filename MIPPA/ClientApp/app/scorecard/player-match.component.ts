@@ -1,9 +1,7 @@
 ﻿import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Player } from '../model/player';
-import { ScorecardService } from './scorecard.service';
-import { Observable }     from 'rxjs/Observable';
 import { PlayerMatchViewModel } from '../viewmodel/scorecard/playermatchviewmodel';
+
+import { ScorecardService } from './scorecard.service';
 
 @Component({
     selector: 'player-match',
@@ -11,83 +9,24 @@ import { PlayerMatchViewModel } from '../viewmodel/scorecard/playermatchviewmode
     styles: [require('./scorecard.component.css')]
 })
 export class PlayerMatchComponent implements OnInit {
-    @Input() maxScore: number;
-    @Input() matches: Array<PlayerMatchViewModel>;
-    @Input() scorecardState: number;
-    queuedMatches: Array<PlayerMatchViewModel>;
-    playedMatches: Array<PlayerMatchViewModel>;
-    skippedMatches: Array<PlayerMatchViewModel>;
-    @Input() numberOfTables: number;
-    started: Boolean;
-    onDeckMatches: Array<PlayerMatchViewModel>;
-    allMatches: Boolean;
-    editMode: Boolean;
+    @Input('myTr') viewModel: any;
     @Output() onSaveScores = new EventEmitter<boolean>();
-    @Output() onFinalizeMatch = new EventEmitter<boolean>();
-    canSave: Boolean;
-    spinnerMatch: Boolean = false;
-
-    constructor(private scorecardService: ScorecardService, private activatedRoute: ActivatedRoute) {
-        this.playedMatches = new Array<PlayerMatchViewModel>();
-        this.queuedMatches = new Array<PlayerMatchViewModel>();
-        this.skippedMatches = new Array<PlayerMatchViewModel>();
-        this.onDeckMatches = new Array<PlayerMatchViewModel>();
-    }
+    match: PlayerMatchViewModel;
+    maxScore: number;
+    spinnerMatch: boolean = false;
+    scoreOptions: number[] = [];
 
     ngOnInit() {
-            this.activatedRoute
-                .queryParams
-                .subscribe(queryParam => this.editMode = <Boolean>queryParam['edit']);
+        this.match = this.viewModel.match;
+        this.maxScore = this.viewModel.maxScore;
 
-        this.loadQueue();
+        this.scoreOptions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
     }
 
-    finalizeMatch() {
-        this.onFinalizeMatch.emit(true);
-    }
+    constructor(private scorecardService: ScorecardService) { }
 
-    addTable() {
-        if (this.queuedMatches.length > 0) {
-            this.playedMatches.push(this.queuedMatches[0]);
-            this.queuedMatches.splice(0, 1);
-        }
-
-        this.onDeck();
-    }
-
-    showAllMatches() {
-        this.allMatches = !this.allMatches;
-    }
-
-    loadQueue() {
-        var nonSavedMatches =
-            this.matches.filter(
-                function (value) {
-                    return value.saved != true;
-                });
-
-
-        for (let match of nonSavedMatches) {
-            this.queuedMatches.push(match);
-        }
-
-        this.started = true;
-
-        for (var i = 0; i < this.numberOfTables; i++) {
-            this.addTable();
-        }
-    }
-
-    onDeck() {
-        this.onDeckMatches = new Array<PlayerMatchViewModel>();
-
-        for (var i = 0; i < this.numberOfTables; i++) {
-            if (this.queuedMatches.length < i + 1) {
-                return;
-            }
-
-            this.onDeckMatches.push(this.queuedMatches[i]);
-        }
+    onSelectScoreChange() {
+        this.match.awayPlayerScore = this.scoreOptions[this.scoreOptions.length - 1] - this.match.homePlayerScore;
     }
 
     saveScores(viewModel: PlayerMatchViewModel) {
@@ -99,7 +38,7 @@ export class PlayerMatchComponent implements OnInit {
             .subscribe(
             data => returnData = data,
             e => {
-                    viewModel.validationError = true;
+                viewModel.validationError = true;
             },
             () => {
                 if (returnData.homeScore != viewModel.homePlayerScore ||
@@ -110,23 +49,6 @@ export class PlayerMatchComponent implements OnInit {
                     viewModel.saved = true;
                     viewModel.validationError = false;
                     this.onSaveScores.emit(true);
-
-                    if (!this.allMatches) {
-                        // Get the index of the match in the queue and the index in playedTables
-                        var indexOfPlayedMatch = this.playedMatches.indexOf(viewModel);
-                        var indexOfQueuedMatch = this.queuedMatches.indexOf(viewModel);
-
-
-                        if (this.queuedMatches.length > 0) {
-                            this.playedMatches.splice(indexOfPlayedMatch, 1, this.queuedMatches[0]);
-                            this.queuedMatches.splice(0, 1);
-                        }
-                        else {
-                            this.playedMatches.splice(indexOfPlayedMatch, 1);
-                        }
-
-                        this.onDeck();
-                    }
                 }
 
                 this.spinnerMatch = false;
@@ -134,9 +56,6 @@ export class PlayerMatchComponent implements OnInit {
     }
 
     incrementScore(viewModel: PlayerMatchViewModel, isHome: boolean) {
-        if (!this.editMode)
-            return;
-
         if (isHome) {
             if (viewModel.homePlayerScore != this.maxScore) {
                 viewModel.homePlayerScore++;
@@ -152,12 +71,13 @@ export class PlayerMatchComponent implements OnInit {
             viewModel.homePlayerScore = this.maxScore - viewModel.awayPlayerScore;
         }
 
+        if (viewModel.saved) {
+            viewModel.saved = false;
+        }
+
     }
 
     decrementScore(viewModel: PlayerMatchViewModel, isHome: boolean) {
-        if (!this.editMode)
-            return;
-
         if (isHome) {
             if (viewModel.homePlayerScore > 0) {
                 viewModel.homePlayerScore--;
@@ -171,6 +91,10 @@ export class PlayerMatchComponent implements OnInit {
             }
 
             viewModel.homePlayerScore = this.maxScore - viewModel.awayPlayerScore;
+        }
+
+        if (viewModel.saved) {
+            viewModel.saved = false;
         }
     }
 }
