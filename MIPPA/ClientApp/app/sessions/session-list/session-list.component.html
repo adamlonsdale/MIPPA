@@ -1,5 +1,5 @@
 <div>
-  <button class="btn btn-primary" (click)="onAdd()" [disabled]="addingSession || editingSession">Add Session</button>
+  <button class="btn btn-sm btn-primary" (click)="onAdd()" [disabled]="addingSession || editingSession">Add Session</button>
   <div class="list-group">
     <div *ngIf="!addingSession && !editingSession">
       <cp-session-item 

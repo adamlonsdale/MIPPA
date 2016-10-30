@@ -24,3 +24,7 @@
 .affix + .container-fluid {
   padding-top: 70px;
 }
+
+body {
+    margin-bottom: 30px;
+}

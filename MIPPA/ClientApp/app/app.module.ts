@@ -11,6 +11,7 @@ import { LoginService } from './login/login.service';
 import { ScorecardService } from './scorecard/scorecard.service';
 import { HandicapsService } from './sessions/handicaps/handicaps.service';
 import { StatsService } from './sessions/statistics/stats.service';
+import { TestingService } from './testing/testing.service';
 
 import { AppComponent } from './app.component';
 import { SessionsComponent } from './sessions/sessions.component';
@@ -28,10 +29,13 @@ import { RoundComponent } from './scorecard/round.component';
 import { PlayerMatchComponent } from './scorecard/player-match.component';
 import { HandicapEditComponent } from './sessions/handicaps/handicap-edit.component';
 import { StatsComponent } from './sessions/statistics/stats.component';
+import { TestingComponent } from './testing/testing.component';
 
 // Autocomplete
-import { AutoCompleteModule } from 'primeng/primeng';
 import { ScorecardComponent } from './scorecard/scorecard.component';
+
+import { Ng2BootstrapModule } from 'ng2-bootstrap/components';
+
 
 @NgModule({
     declarations: [
@@ -51,15 +55,16 @@ import { ScorecardComponent } from './scorecard/scorecard.component';
         HandicapsComponent,
         HandicapEditComponent,
         StatsComponent,
-        PlayerMatchComponent
+        PlayerMatchComponent,
+        TestingComponent
     ],
     imports: [
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
         ConceptsRoutingModule,
         FormsModule,
-        AutoCompleteModule
+        Ng2BootstrapModule
     ],
-    providers: [SessionsService, TeamsService, ScheduleService, LoginService, ScorecardService, HandicapsService, StatsService],
+    providers: [SessionsService, TeamsService, ScheduleService, LoginService, ScorecardService, HandicapsService, StatsService, TestingService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

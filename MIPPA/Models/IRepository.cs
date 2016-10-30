@@ -33,7 +33,6 @@ namespace Mippa.Models
         ScorecardViewModel GetScorecardInformation(int scorecardId);
         ScorecardViewModel GetScorecardInformation_Initial(int scorecardId);
         PlayerResultsViewModel GetPlayerResults(int scorecardId);
-        TeamResultsViewModel GetTeamResults(int scorecardId);
         ScorecardViewModel GetScorecardInformation_NotInitial(int scorecardId);
 
         void CreateMatchesForScorecard(ScorecardViewModel viewModel);

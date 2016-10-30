@@ -11,65 +11,60 @@ import { AppComponent } from '../../app.component';
 import { ScheduleViewModel } from '../../viewmodel/schedule/schedule-view-model';
 
 @Component({
-  selector: 'cp-schedule',
-  template: require('./schedule.component.html')
+    selector: 'cp-schedule',
+    template: require('./schedule.component.html')
 })
 export class ScheduleComponent implements OnInit {
-  private subscription: Subscription;
-  private sessionId: number;
+    private subscription: Subscription;
+    private sessionId: number;
 
-  mode: string;
+    mode: string;
 
-  schedules: any[];
+    schedules: any[];
 
-  constructor(
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private scheduleService: ScheduleService,
-    private sessionsService: SessionsService) {
+    constructor(
+        private router: Router,
+        private activatedRoute: ActivatedRoute,
+        private scheduleService: ScheduleService,
+        private sessionsService: SessionsService) {
 
-    this.sessionsService.sessionsChanged.subscribe(
-      (sessions: any) => this.loadSchedule()
-    );
-  }
+        this.sessionsService.sessionsChanged.subscribe(
+            (sessions: any) => this.loadSchedule()
+        );
+    }
 
-  ngOnInit() {
+    ngOnInit() {
 
-      if (this.activatedRoute.parent.parent === null) {
-          this.mode = "view";
-          this.subscription =
-              this.activatedRoute.params.subscribe(
-                  (params: any) => {
-                      this.sessionId = +params['sessionId'];
+        if (this.activatedRoute.parent.parent === null) {
+            this.mode = "view";
+            this.subscription =
+                this.activatedRoute.params.subscribe(
+                    (params: any) => {
+                        this.sessionId = +params['sessionId'];
 
-                      this.scheduleService.GetSchedulesForSession(this.sessionId)
-                          .subscribe(data => this.schedules = data);
-                  }
-              );
-      }
-      else {
-          this.mode = "edit";
-          this.subscription =
-              this.activatedRoute.parent.params.subscribe(
-                  (params: any) => {
-                      this.sessionId = +params['sessionId']
-                      this.loadSchedule();
-                  }
-              );
-      }
-  }
+                        this.scheduleService.GetSchedulesForSession(this.sessionId)
+                            .subscribe(data => this.schedules = data);
+                    }
+                );
+        }
+        else {
+            this.mode = "edit";
+            this.subscription =
+                this.activatedRoute.parent.params.subscribe(
+                    (params: any) => {
+                        this.sessionId = +params['sessionId']
+                        this.loadSchedule();
+                    }
+                );
+        }
+    }
 
-  loadSchedule() {
-    this.schedules = this.scheduleService.getScheduleFromSession(this.sessionId);
-  }
+    loadSchedule() {
+        this.schedules = this.scheduleService.getScheduleFromSession(this.sessionId);
+    }
 
-  openScorecard(scorecardId: number) {
-      if (this.mode == "view") {
-          this.router.navigate(['/', 'app', 'scorecard', scorecardId], {queryParams: {'view': 'true'}});
-      }
-      else if (this.mode == "edit") {
-          this.router.navigate(['/', 'app', 'scorecard', scorecardId], { queryParams: { 'edit': 'true' } });
-      }
-  }
+    openScorecard(scorecardId: number) {
+        this.router.navigate(['/', 'app', 'scorecard', scorecardId]);
+    }
 
 }

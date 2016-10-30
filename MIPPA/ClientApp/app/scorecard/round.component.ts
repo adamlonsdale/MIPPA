@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+﻿import { Component, OnInit, Input, Output, EventEmitter, ViewChild, OnChanges } from '@angular/core';
 import { Player } from '../model/player';
 import { Observable }     from 'rxjs/Observable';
 
@@ -8,7 +8,7 @@ import { PlayerMatchViewModel } from '../viewmodel/scorecard/playermatchviewmode
     selector: 'round',
     template: require('./round.component.html')
 })
-export class RoundComponent implements OnInit {
+export class RoundComponent implements OnInit, OnChanges {
     @Input() maxScore: number;
     @Input() scorecardState: number;
     @Input() rounds: Array<RoundViewModel>;
@@ -24,6 +24,12 @@ export class RoundComponent implements OnInit {
     }
 
     ngOnInit() {
+        console.log('Loading rounds from input');
+        //this.selectedRound = this.rounds[this.selectedRoundIndex];
+    }
+
+    ngOnChanges() {
+        this.selectedRoundIndex = 0;
         this.selectedRound = this.rounds[this.selectedRoundIndex];
     }
 

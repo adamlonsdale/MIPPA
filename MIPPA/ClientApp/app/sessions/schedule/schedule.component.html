@@ -1,35 +1,37 @@
 <div class="list-group">
-    <div *ngFor="let schedule of schedules" class="list-group-item">
+    <div *ngFor="let schedule of schedules; let i = index;" class="list-group-item">
         <div class="list-group-item-heading">
             <h4>{{schedule.date}}</h4>
-        </div>
-        <div class="list-group-item-text">
             <h6>{{schedule.time}}</h6>
+            <button class="btn btn-sm btn-info pull-right" data-toggle="collapse" [attr.data-target]="'#schedule' + i">Show</button>
+            <div class="clearfix"></div>
         </div>
-        <div class="list-group">
-            <div *ngFor="let match of schedule.matches" class="list-group-item">
-                <div class="list-group-item-heading">
-                    <h6>Table: Not Assigned</h6>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 col-md-9">
-                        <h4>{{match.homeTeam.name}} vs. {{match.awayTeam.name}}</h4>
+        <div [attr.id]="'schedule' + i" class="collapse">
+            <div class="list-group">
+                <div *ngFor="let match of schedule.matches" class="list-group-item">
+                    <div class="list-group-item-heading">
+                        <h6>Table: Not Assigned</h6>
                     </div>
-                    <div class="col-xs-12 col-md-3">
-                        <button *ngFor="let scorecard of match.scorecards"
-                                class="btn"
-                                [class.btn-default]="scorecard.state == 0"
-                                [class.btn-warning]="scorecard.state == 1"
-                                [class.btn-danger]="scorecard.state == 2"
-                                [class.btn-success]="scorecard.state == 3"
-                                (click)="openScorecard(scorecard.scorecardId)">
-                            {{scorecard.format == 0 ? "8-Ball" : "9-Ball"}} Scorecard
-                        </button>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-9">
+                            <h4>{{match.homeTeam.name}} vs. {{match.awayTeam.name}}</h4>
+                        </div>
+                        <div class="col-xs-12 col-md-3">
+                            <button *ngFor="let scorecard of match.scorecards"
+                                    class="btn btn-sm"
+                                    [class.btn-default]="scorecard.state == 0"
+                                    [class.btn-warning]="scorecard.state == 1"
+                                    [class.btn-danger]="scorecard.state == 2"
+                                    [class.btn-success]="scorecard.state == 3"
+                                    (click)="openScorecard(scorecard.scorecardId)">
+                                {{scorecard.format == 0 ? "8-Ball" : "9-Ball"}} Scorecard
+                            </button>
+                        </div>
                     </div>
-                </div>
 
 
-                <div class="clearfix"></div>
+                    <div class="clearfix"></div>
+                </div>
             </div>
         </div>
     </div>

@@ -18,15 +18,15 @@
 				<div class="form-group">
 					<input type="text" class="form-control" [ngModel]="team.name" name="name" />
 				</div>
-				<button class="btn btn-success" type="submit"><i class="fa fa-floppy-o fa-2x"></i></button>
-				<button class="btn btn-default" type="button" (click)="onCancel()"><i class="fa fa-ban fa-2x"></i></button>
+				<button class="btn btn-sm btn-success" type="submit"><i class="fa fa-floppy-o fa-2x"></i></button>
+				<button class="btn btn-sm btn-default" type="button" (click)="onCancel()"><i class="fa fa-ban fa-2x"></i></button>
 			</form>
 		</div>
 	</div>
 	<div class="panel-body clearfix" *ngIf="!collapsed">
 		<div *ngIf="!this.team.bye">
 			<div *ngIf="!playerAdd">
-				<button class="btn btn-primary" (click)="onPlayerAdd()"><i class="fa fa-2x fa-user-plus"></i></button>
+				<button class="btn btn-sm btn-primary" (click)="onPlayerAdd()"><i class="fa fa-2x fa-user-plus"></i></button>
 			</div>
 			<div *ngIf="playerAdd">
 				<cp-player-edit [player]="newPlayer" (onCancelPlayer)="onCancelPlayer()" (onSubmitPlayer)="onSubmitPlayer($event)"></cp-player-edit>

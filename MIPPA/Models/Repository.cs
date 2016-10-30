@@ -721,7 +721,9 @@ namespace Mippa.Models
             viewModel.OtherScorecardId = GetOtherScorecardId(scorecard);
 
             viewModel.ScorecardId = scorecard.ScorecardId;
+            viewModel.HomeTeamId = scorecard.TeamMatch.HomeTeamId;
             viewModel.HomeTeamName = scorecard.TeamMatch.HomeTeam.Name;
+            viewModel.AwayTeamId = scorecard.TeamMatch.AwayTeamId;
             viewModel.AwayTeamName = scorecard.TeamMatch.AwayTeam.Name;
 
             viewModel.HomePlayers = new HashSet<PlayerViewModel>();
@@ -822,15 +824,13 @@ namespace Mippa.Models
             viewModel.OtherScorecardId = GetOtherScorecardId(scorecard);
             viewModel.State = scorecard.State;
             viewModel.ScorecardId = scorecard.ScorecardId;
+            viewModel.ScorecardId = scorecard.ScorecardId;
+            viewModel.HomeTeamId = scorecard.TeamMatch.HomeTeamId;
             viewModel.HomeTeamName = scorecard.TeamMatch.HomeTeam.Name;
+            viewModel.AwayTeamId = scorecard.TeamMatch.AwayTeamId;
             viewModel.AwayTeamName = scorecard.TeamMatch.AwayTeam.Name;
             viewModel.Format = scorecard.Format;
             viewModel.MatchupType = scorecard.TeamMatch.Schedule.Session.MatchupType;
-
-            if (scorecard.State == ScorecardState.Finalized)
-            {
-                return viewModel;
-            }
 
             viewModel.Rounds = new HashSet<RoundViewModel>();
 
@@ -1737,11 +1737,6 @@ namespace Mippa.Models
             homePlayerScore = playerMatchFromContext.HomePlayerScore.Score;
             awayPlayerScore = playerMatchFromContext.AwayPlayerScore.Score;
             scorecardState = (int)playerMatchFromContext.Scorecard.State;
-        }
-
-        public TeamResultsViewModel GetTeamResults(int scorecardId)
-        {
-            throw new NotImplementedException();
         }
     }
 }

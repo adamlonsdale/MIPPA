@@ -31,10 +31,12 @@ export class ScorecardComponent implements OnInit, OnDestroy {
     requiredPlayerCount: number;
     handicapsAreNotSet: boolean;
     playersWithNoHandicap: Array<PlayerViewModel>;
-    editMode: Boolean;
     enteringLineup: Boolean;
     numberOfTables: number = 1;
     tablesSubmitted: boolean = false;
+
+    homeTeamPlayerResultsViewModel: Array<PlayerViewModel>;
+    awayTeamPlayerResultsViewModel: Array<PlayerViewModel>;
 
     constructor(private scorecardService: ScorecardService, private activatedRoute: ActivatedRoute, private router: Router) {
         this.viewModel = new ScoreCardViewModel();
@@ -49,7 +51,7 @@ export class ScorecardComponent implements OnInit, OnDestroy {
     }
 
     onOtherScorecard() {
-        this.router.navigate(['/', 'app', 'scorecard', this.viewModel.otherScorecardId], { preserveQueryParams: true });
+        this.router.navigate(['/', 'app', 'scorecard', this.viewModel.otherScorecardId]);
     }
 
     startLineup(something: any) {
@@ -90,9 +92,6 @@ export class ScorecardComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.activatedRoute
-            .queryParams
-            .subscribe(queryParam => this.editMode = <Boolean>queryParam['edit']);
         this.subscription =
             this.activatedRoute.params.subscribe(
                 (params: any) => {
@@ -124,14 +123,13 @@ export class ScorecardComponent implements OnInit, OnDestroy {
                     this.selectedHomePlayer = this.viewModel.homePlayers[0];
                     this.selectedAwayPlayer = this.viewModel.awayPlayers[0];
                 }
-                else if (this.viewModel.state != 3) {
+                else {
                     this.displayMatches();
                 }
 
                 if (this.viewModel.state == 0) {
                     this.checkHandicaps();
                 }
-
             });
 
         this.getTeamResults();
@@ -193,8 +191,6 @@ export class ScorecardComponent implements OnInit, OnDestroy {
                         this.displayMatches();
 
                         this.enteringLineup = false;
-
-                        this.router.navigate(['/', 'app', 'scorecard', this.scorecardId]);
                     });
             });
     }
@@ -234,12 +230,16 @@ class TeamResultsViewModel {
     awayTeamHandicap: number;
     homeRoundsWon: Array<number>;
     awayRoundsWon: Array<number>;
+    homePlayerResults: Array<PlayerViewModel>;
+    awayPlayerResults: Array<PlayerViewModel>;
     scorecardState: number;
 }
 
 class ScoreCardViewModel {
     scorecardId: number;
+    homeTeamId: number;
     homeTeamName: string;
+    awayTeamId: number;
     awayTeamName: string;
     homePlayers: Array<PlayerViewModel>;
     awayPlayers: Array<PlayerViewModel>;
@@ -260,6 +260,7 @@ class ScoreCardViewModel {
 class PlayerViewModel {
     playerId: number;
     name: string;
+    totalScore: number;
     handicap: number;
 }
 

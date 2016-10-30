@@ -1,82 +1,43 @@
-﻿<!--<td>-->
-<div class="row border-shadow-grey">
+﻿<div class="col-xs-12 border-shadow-grey">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-xs-12">
+            <h5>Match {{viewModel.index + 1}}</h5>
+            <div class="row">
+                <div class="col-xs-6 text-center">
+                    <span>{{match.homePlayer.name}}</span> - <span>{{match.homePlayer.handicap}}</span> <strong [hidden]="!match.homeBreaking">(B)</strong>
+
+                </div>
+                <div class="col-xs-6 text-center">
+                    <span>{{match.awayPlayer.name}}</span> - <span>{{match.awayPlayer.handicap}}</span> <strong [hidden]="match.homeBreaking">(B)</strong>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="scoring col-xs-6 text-center">
+            <i *ngIf="viewModel.scorecardState != 3" class="fa fa-minus btn btn-sm btn-primary" (click)="decrementScore(match, true)"></i>
+            <span>{{match.homePlayerScore}}</span>
+            <i *ngIf="viewModel.scorecardState != 3" class="fa fa-plus btn btn-sm btn-primary" (click)="incrementScore(match, true)"></i>
+
+        </div>
+        <div class="scoring col-xs-6 text-center">
+            <span>{{match.awayPlayerScore}}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12" [hidden]="match.saved">
             <div class="alert alert-danger" [hidden]="!match.validationError">
                 <strong>Error!</strong> Scores do not match on server!  Please save again.
             </div>
-            <div class="alert alert-warning" [hidden]="match.saved">
-                Not saved.
-            </div>
-        </div>
-    </div>
-    <br />
-    <div class="row border-shadow">
-        <div class="col-sm-12">
-            <div class="row">
-                <div class="col-xs-6">
-                    <span>{{match.homePlayer.name}}</span> <strong [hidden]="!match.homeBreaking">(B)</strong>
-                    <h5>Hdcp: {{match.homePlayer.handicap}}</h5>
-                </div>
-                <div class="scoring col-xs-6">
-                    <i class="fa fa-minus btn btn-sm btn-info" (click)="decrementScore(match, true)"></i>
-                    <span>{{match.homePlayerScore}}</span>
-                    <i class="fa fa-plus btn btn-sm btn-info" (click)="incrementScore(match, true)"></i>
-                    <button class="btn btn-sm btn-success" style="margin-top: 5px" (click)="saveScores(match)" [disabled]="spinnerMatch || (match.homePlayerScore == 0 && match.awayPlayerScore == 0)">
-                        <i class="fa fa-2x"
-                           [class.fa-floppy-o]="!spinnerMatch"
-                           [class.fa-spinner]="spinnerMatch"
-                           [class.fa-pulse]="spinnerMatch">
-                        </i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row border-shadow">
-        <div class="col-sm-12">
-            <div class="row">
-                <div class="col-xs-6">
-                    <span>{{match.awayPlayer.name}}</span> <strong [hidden]="match.homeBreaking">(B)</strong>
-                    <h5>Hdcp: {{match.awayPlayer.handicap}}</h5>
-                </div>
-                <div class="scoring col-xs-6">
-                    <span>{{match.awayPlayerScore}}</span>
-                </div>
-            </div>
+            <button class="btn btn-sm btn-success pull-right" style="margin-top: 5px" (click)="saveScores(match)" [disabled]="spinnerMatch || (match.homePlayerScore == 0 && match.awayPlayerScore == 0)">
+                <i class="fa fa-2x"
+                   [class.fa-floppy-o]="!spinnerMatch"
+                   [class.fa-spinner]="spinnerMatch"
+                   [class.fa-pulse]="spinnerMatch">
+                </i>
+            </button>
+            <div class="clearfix"></div>
         </div>
     </div>
 </div>
-
-
-
-<!--<div class="row">
-    <div class="col-sm-12">
-        <div class="row">
-            <div class="col-sm-6">
-                <p>{{match.homePlayer.name}} <strong [hidden]="!match.homeBreaking">(B)</strong></p>
-                <div class="scoring">
-                    <i class="fa fa-minus btn btn-sm btn-info" (click)="decrementScore(match, true)"></i>
-                    <span>{{match.homePlayerScore}}</span>
-                    <i class="fa fa-plus btn btn-sm btn-info" (click)="incrementScore(match, true)"></i>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <p>{{match.awayPlayer.name}} <strong [hidden]="match.homeBreaking">(B)</strong></p>
-                <span class="scoring">{{match.awayPlayerScore}}</span>
-                <button class="btn btn-sm btn-success pull-right" (click)="saveScores(match)" [disabled]="spinnerMatch || (match.homePlayerScore == 0 && match.awayPlayerScore == 0)">
-                    <i class="fa fa-2x"
-                       [class.fa-floppy-o]="!spinnerMatch"
-                       [class.fa-spinner]="spinnerMatch"
-                       [class.fa-pulse]="spinnerMatch">
-                    </i>
-                </button>
-                <div class="clearfix"></div>
-            </div>
-            <div class="alert alert-danger" [hidden]="!match.validationError">
-                <strong>Error!</strong> Scores do not match on server!  Please save again.
-            </div>
-        </div>
-    </div>
-</div>-->
-<!--</td>-->
