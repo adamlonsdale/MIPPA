@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Mippa.ViewModels.Statistics;
 using MIPPA.ViewModels;
+using MIPPA.Utilities;
 
 namespace Mippa.Models
 {
@@ -802,6 +803,7 @@ namespace Mippa.Models
 
             viewModel.State = scorecard.State;
             viewModel.Format = scorecard.Format;
+            viewModel.SessionId = scorecard.TeamMatch.Schedule.SessionId;
 
             foreach (var player in scorecard.TeamMatch.HomeTeam.Players)
             {
@@ -1092,9 +1094,67 @@ namespace Mippa.Models
             return _context.Players.AsEnumerable();
         }
 
-        public IEnumerable<Player> GetPlayersFromQuery(string aQuery)
+        public IEnumerable<PlayerQueryViewModel> GetPlayersFromQuery(string aQuery, int? sessionId = null)
         {
-            return _context.Players.Where(x => x.Name.Contains(aQuery)).AsEnumerable();
+            var allPlayers = _context.Players.ToList().Where(x => x.Name.IndexOf(aQuery, StringComparison.OrdinalIgnoreCase) >= 0)
+                    .Select(
+                    x =>
+                    new PlayerQueryViewModel
+                    {
+                        ExistsInSession = 
+                        (sessionId != null && sessionId.HasValue && _context.TeamRosters.Include(z => z.Team).Any(y => y.PlayerId == x.PlayerId && y.Team.SessionId == sessionId.Value)) ?
+                        true:
+                        false,
+                        Handicap =
+                        (sessionId != null && sessionId.HasValue && _context.TeamRosters.Include(z => z.Team).Any(y => y.PlayerId == x.PlayerId && y.Team.SessionId == sessionId.Value)) ?
+                        _context.TeamRosters.Include(z => z.Team).First(y => y.PlayerId == x.PlayerId && y.Team.SessionId == sessionId.Value).Handicap:
+                        0,
+                        Name = x.Name,
+                        PlayerId = x.PlayerId
+                    }
+                    )
+                    .AsEnumerable();
+
+            //if (sessionId == null || !sessionId.HasValue)
+            {
+                return allPlayers;
+            }
+
+            // Get All The Players from TeamRosters in session
+            //var playersInSession = _context.TeamRosters
+            //    .Include(x => x.Team)
+            //    .Include(x => x.Player)
+            //    .GroupBy(x => x.PlayerId)
+            //    .Where(x => x.Team.SessionId == sessionId.Value)
+            //    .Select(x => 
+            //    new
+            //    {
+            //        PlayerId = x.PlayerId,
+            //        Handicap = x.Handicap,
+            //        Name = x.Player.Name
+            //    })
+            //    .Where(x => x.Name.Contains(aQuery))
+            //    .Select(
+            //        x =>
+            //        new PlayerQueryViewModel
+            //        {
+            //            ExistsInSession = true,
+            //            Handicap = x.Handicap,
+            //            Name = x.Name,
+            //            PlayerId = x.PlayerId
+            //        }
+            //        )
+            //    .ToList();
+
+            //foreach(var player in allPlayers)
+            //{
+            //    if (!playersInSession.Any(x => x.PlayerId == player.PlayerId))
+            //    {
+            //        playersInSession.Add(player);
+            //    }
+            //}
+
+            //return playersInSession;
         }
 
         public Manager RemoveManager(int managerId)
@@ -1333,7 +1393,8 @@ namespace Mippa.Models
                 new TeamRoster
                 {
                     PlayerId = playerFromContext.PlayerId,
-                    TeamId = teamId
+                    TeamId = teamId,
+                    Handicap = player.Handicap
                 };
 
             team.Players.Add(teamRoster);

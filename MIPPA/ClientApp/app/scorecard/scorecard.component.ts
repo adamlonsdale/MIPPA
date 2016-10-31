@@ -250,6 +250,7 @@ class TeamResultsViewModel {
 
 class ScoreCardViewModel {
     scorecardId: number;
+    sessionId: number;
     homeTeamId: number;
     homeTeamName: string;
     awayTeamId: number;

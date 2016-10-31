@@ -6,7 +6,6 @@ import { ScorecardComponent } from './scorecard/scorecard.component';
 import { StatsComponent } from './sessions/statistics/stats.component';
 import { LoginComponent } from './login/login.component';
 import { ScheduleComponent } from './sessions/schedule/schedule.component';
-import { TestingComponent } from './testing/testing.component';
 
 import { SESSION_ROUTES } from './sessions/sessions.routes';
 
@@ -17,7 +16,6 @@ const routes: Routes = [
     { path: 'app/scorecard/:scorecardId', component: ScorecardComponent },
     { path: 'app/schedule/:sessionId', component: ScheduleComponent },
     { path: 'app/statistics/:sessionId', component: StatsComponent },
-    { path: 'app/testing', component: TestingComponent },
     { path: '**', redirectTo: '/app/login' },
 ];
 

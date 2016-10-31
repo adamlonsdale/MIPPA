@@ -29,7 +29,7 @@ import { RoundComponent } from './scorecard/round.component';
 import { PlayerMatchComponent } from './scorecard/player-match.component';
 import { HandicapEditComponent } from './sessions/handicaps/handicap-edit.component';
 import { StatsComponent } from './sessions/statistics/stats.component';
-import { TestingComponent } from './testing/testing.component';
+import { SubstituteComponent } from './scorecard/substitute.component';
 
 // Autocomplete
 import { ScorecardComponent } from './scorecard/scorecard.component';
@@ -56,7 +56,7 @@ import { Ng2BootstrapModule } from 'ng2-bootstrap/components';
         HandicapEditComponent,
         StatsComponent,
         PlayerMatchComponent,
-        TestingComponent
+        SubstituteComponent
     ],
     imports: [
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.

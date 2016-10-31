@@ -64,7 +64,7 @@ namespace Mippa.Models
         void AddPlayer(Player player);
         Player GetPlayer(int playerId);
         IEnumerable<Player> GetAllPlayers();
-        IEnumerable<Player> GetPlayersFromQuery(string aQuery);
+        IEnumerable<PlayerQueryViewModel> GetPlayersFromQuery(string aQuery, int? sessionId = null);
         void UpdatePlayer(Player player);
         Player RemovePlayer(int playerId);
 

@@ -16,6 +16,33 @@ export class ScorecardService {
         this.headers.append('Accept', 'application/json');
     }
 
+    AddPlayer(player: any): Observable<any> {
+        return this.http.post(
+            '/api/player',
+            JSON.stringify({
+                name: player.name
+            }),
+            { headers: this.headers })
+            .map(res => res.json());
+    }
+
+    AddPlayerToTeam(player: any, teamId: number): Observable<any> {
+        return this.http.post(
+            '/api/teamroster/' + teamId,
+            JSON.stringify(player),
+            { headers: this.headers })
+            .map(res => res.json());
+    }
+
+    GetPlayersQuery(term: string, sessionId: number): Observable<any[]> {
+        let params: URLSearchParams = new URLSearchParams();
+        params.set('term', term);
+
+
+        return this.http.get('/api/player/' + sessionId, { search: params })
+            .map(res => res.json());
+    }
+
     GetStatistics(sessionId: number, format: number): Observable<any> {
         return this.http.get('api/statistics/' + sessionId + '/' + format).map(res => res.json());
     }

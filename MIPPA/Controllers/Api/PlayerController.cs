@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mippa.Models;
+using Mippa.ViewModels;
 using System.Collections.Generic;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -22,7 +23,7 @@ namespace Mippa.Controllers.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IEnumerable<Player> GetAll([FromQuery] string term)
+        public IEnumerable<object> GetAll([FromQuery] string term)
         {
             if (string.IsNullOrWhiteSpace(term))
             {
@@ -32,21 +33,15 @@ namespace Mippa.Controllers.Api
             return _repository.GetPlayersFromQuery(term);
         }
 
-        /// <summary>
-        /// Obtain a specific Player by PlayerId
-        /// </summary>
-        /// <param name="playerId"></param>
-        /// <returns></returns>
-        [HttpGet("{playerId}", Name = "GetPlayer")]
-        public IActionResult GetById(int playerId)
+        [HttpGet("{sessionId}")]
+        public IEnumerable<PlayerQueryViewModel> GetPlayerViewModelsFromQuery([FromQuery] string term, int sessionId)
         {
-            var player = _repository.GetPlayer(playerId);
-
-            if (player == null)
+            if (string.IsNullOrWhiteSpace(term))
             {
-                return NotFound();
+                return null;
             }
-            return new ObjectResult(player);
+
+            return _repository.GetPlayersFromQuery(term, sessionId);
         }
 
         /// <summary>
@@ -55,14 +50,14 @@ namespace Mippa.Controllers.Api
         /// <param name="player"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Create([FromBody] Player player)
+        public Player Create([FromBody] Player player)
         {
             if (player == null)
             {
-                return BadRequest();
+                return null;
             }
             _repository.AddPlayer(player);
-            return CreatedAtRoute("GetPlayer", new { playerId = player.PlayerId }, player);
+            return _repository.GetPlayer(player.PlayerId);
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ namespace Mippa.ViewModels
     public class ScorecardViewModel
     {
         public int ScorecardId { get; set; }
+        public int SessionId { get; set; }
         public int HomeTeamId { get; set; }
         public string HomeTeamName { get; set; }
         public int AwayTeamId { get; set; }
