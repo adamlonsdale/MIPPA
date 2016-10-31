@@ -23,7 +23,7 @@ namespace Mippa.Controllers.Api
         [HttpGet("{scorecardId}")]
         public PlayerResultsViewModel GetPlayerResults(int scorecardId)
         {
-            return _repository.GetPlayerResults(scorecardId);
+            return _repository.CalculatePlayerResults(scorecardId, false);
         }
     }
 }

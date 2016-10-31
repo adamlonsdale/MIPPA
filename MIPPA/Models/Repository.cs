@@ -144,7 +144,7 @@ namespace Mippa.Models
             foreach (var scorecardId in scorecardIds)
             {
                 CalculateTeamResults(scorecardId, true);
-                CalculatePlayerResults(scorecardId);
+                CalculatePlayerResults(scorecardId, true);
 
                 var scorecard = _context.Scorecards.Single(x => x.ScorecardId == scorecardId);
 
@@ -271,29 +271,7 @@ namespace Mippa.Models
             return viewModel;
         }
 
-        public PlayerResultsViewModel GetPlayerResults(int scorecardId)
-        {
-            var scorecard = _context.Scorecards
-                .Include(s => s.PlayerResults)
-                .ThenInclude(s => s.Player)
-                .SingleOrDefault(s => s.ScorecardId == scorecardId);
-
-            if (scorecard == null)
-            {
-                return null;
-            }
-
-            var viewModel = new PlayerResultsViewModel();
-
-            foreach (var result in scorecard.PlayerResults.OrderBy(s => s.Player.Name))
-            {
-                viewModel.Players.Add(new PlayerViewModel { TotalScore = result.Score, Name = result.Player.Name });
-            }
-
-            return viewModel;
-        }
-
-        public void CalculatePlayerResults(int scorecardId)
+        public PlayerResultsViewModel CalculatePlayerResults(int scorecardId, bool saveResults = false)
         {
             var scorecard = _context.Scorecards
                 .Include(s => s.PlayerResults)
@@ -302,18 +280,64 @@ namespace Mippa.Models
                 .ThenInclude(s => s.HomePlayerScore)
                 .Include(s => s.PlayerMatches)
                 .ThenInclude(s => s.AwayPlayerScore)
+                .Include(s => s.TeamMatch)
+                .ThenInclude(s => s.Schedule)
+                .ThenInclude(s => s.Session)
                 .SingleOrDefault(x => x.ScorecardId == scorecardId);
+
+            PlayerResultsViewModel playerResultsViewModel = new PlayerResultsViewModel();
 
             if (scorecard == null)
             {
-                return;
+                return playerResultsViewModel;
+            }
+
+            if (scorecard.State == ScorecardState.Initial)
+            {
+                var homeTeam = _context.TeamRosters.Where(x => x.TeamId == scorecard.TeamMatch.HomeTeamId).Include(x => x.Player);
+                var awayTeam = _context.TeamRosters.Where(x => x.TeamId == scorecard.TeamMatch.AwayTeamId).Include(x => x.Player);
+
+                foreach (var player in homeTeam)
+                {
+                    playerResultsViewModel.HomePlayerResults.Add(new PlayerViewModel
+                    {
+                        PlayerId = player.PlayerId,
+                        Name = player.Player.Name,
+                        Handicap = ConvertHandicap(scorecard.Format, player.Handicap)
+                    });
+                }
+
+                foreach (var player in awayTeam)
+                {
+                    playerResultsViewModel.AwayPlayerResults.Add(new PlayerViewModel
+                    {
+                        PlayerId = player.PlayerId,
+                        Name = player.Player.Name,
+                        Handicap = ConvertHandicap(scorecard.Format, player.Handicap)
+                    });
+                }
+
+                return playerResultsViewModel;
+            }
+
+            int rounds = 5;
+
+            if (scorecard.TeamMatch.Schedule.Session.MatchupType == MatchupType.FourOnFour)
+            {
+                rounds = 4;
+            }
+            else if (scorecard.TeamMatch.Schedule.Session.MatchupType == MatchupType.ThreeOnThree)
+            {
+                rounds = 3;
             }
 
             Dictionary<Player, int> scoresByPlayer = new Dictionary<Player, int>();
             Dictionary<Player, int> winsByPlayer = new Dictionary<Player, int>();
 
+            var playerMatchesList = scorecard.PlayerMatches.ToList();
+
             // Iterate over all PlayerScores
-            foreach (var match in scorecard.PlayerMatches)
+            foreach (var match in playerMatchesList)
             {
                 // Get home and away player
                 var homePlayer = match.HomePlayer;
@@ -324,27 +348,52 @@ namespace Mippa.Models
 
                 if (!scoresByPlayer.ContainsKey(homePlayer))
                 {
+                    var playerResult = scorecard.PlayerResults.Single(p => p.PlayerId == match.HomePlayerId);
                     scoresByPlayer.Add(homePlayer, match.HomePlayerScore.Score);
+                    playerResultsViewModel.HomePlayerResults.Add(new PlayerViewModel
+                    {
+                        PlayerId = match.HomePlayerId,
+                        Name = match.HomePlayer.Name,
+                        Handicap = playerResult.Handicap,
+                        TotalScore = match.HomePlayerScore.Score,
+                        Wins = 0
+                    });
                 }
                 else
                 {
+                    var viewModel = playerResultsViewModel.HomePlayerResults.Single(x => x.PlayerId == match.HomePlayerId);
                     scoresByPlayer[homePlayer] += match.HomePlayerScore.Score;
+                    viewModel.TotalScore += match.HomePlayerScore.Score;
                 }
 
                 if (!scoresByPlayer.ContainsKey(awayPlayer))
                 {
+                    var playerResult = scorecard.PlayerResults.Single(p => p.PlayerId == match.AwayPlayerId);
                     scoresByPlayer.Add(awayPlayer, match.AwayPlayerScore.Score);
+                    playerResultsViewModel.AwayPlayerResults.Add(new PlayerViewModel
+                    {
+                        PlayerId = match.AwayPlayerId,
+                        Name = match.AwayPlayer.Name,
+                        Handicap = playerResult.Handicap,
+                        TotalScore = match.AwayPlayerScore.Score,
+                        Wins = 0
+                    });
                 }
                 else
                 {
+                    var viewModel = playerResultsViewModel.AwayPlayerResults.Single(x => x.PlayerId == match.AwayPlayerId);
                     scoresByPlayer[awayPlayer] += match.AwayPlayerScore.Score;
+                    viewModel.TotalScore += match.AwayPlayerScore.Score;
                 }
 
                 int homePlayerScore = match.HomePlayerScore.Score;
                 int awayPlayerScore = match.AwayPlayerScore.Score;
 
+
                 if (homePlayerScore > awayPlayerScore)
                 {
+                    var viewModel = playerResultsViewModel.HomePlayerResults.Single(x => x.PlayerId == match.HomePlayerId);
+
                     if (!winsByPlayer.ContainsKey(homePlayer))
                     {
                         winsByPlayer.Add(homePlayer, 1);
@@ -353,9 +402,13 @@ namespace Mippa.Models
                     {
                         winsByPlayer[homePlayer]++;
                     }
+
+                    viewModel.Wins = winsByPlayer[homePlayer];
                 }
-                else
+                else if (homePlayerScore < awayPlayerScore)
                 {
+                    var viewModel = playerResultsViewModel.AwayPlayerResults.Single(x => x.PlayerId == match.AwayPlayerId);
+
                     if (!winsByPlayer.ContainsKey(awayPlayer))
                     {
                         winsByPlayer.Add(awayPlayer, 1);
@@ -364,31 +417,49 @@ namespace Mippa.Models
                     {
                         winsByPlayer[awayPlayer]++;
                     }
+
+                    viewModel.Wins = winsByPlayer[awayPlayer];
                 }
             }
 
-            // After going through each match, save the totals for each player
-            foreach (var scoreByPlayer in scoresByPlayer)
+            //if (saveResults)
             {
-                // get play count
-                var playerResult = scorecard.PlayerResults.Single(p => p.PlayerId == scoreByPlayer.Key.PlayerId);
+                // After going through each match, save the totals for each player
+                foreach (var scoreByPlayer in scoresByPlayer)
+                {
+                    var viewModel = 
+                        scorecard.PlayerMatches.Any(x => x.HomePlayerId == scoreByPlayer.Key.PlayerId) ?
+                        playerResultsViewModel.HomePlayerResults.Single(x => x.PlayerId == scoreByPlayer.Key.PlayerId) :
+                        playerResultsViewModel.AwayPlayerResults.Single(x => x.PlayerId == scoreByPlayer.Key.PlayerId);
 
-                var averageScore = scoreByPlayer.Value / playerResult.PlayCount;
+                    // get play count
+                    var playerResult = scorecard.PlayerResults.Single(p => p.PlayerId == scoreByPlayer.Key.PlayerId);
 
-                playerResult.Score = averageScore;
+                    var averageScore = scoreByPlayer.Value / playerResult.PlayCount;
+                    viewModel.AverageScore = averageScore;
+
+                    if (saveResults) playerResult.Score = averageScore;
+                }
+
+                foreach (var winByPlayer in winsByPlayer)
+                {
+                    var viewModel =
+                        scorecard.PlayerMatches.Any(x => x.HomePlayerId == winByPlayer.Key.PlayerId) ?
+                        playerResultsViewModel.HomePlayerResults.Single(x => x.PlayerId == winByPlayer.Key.PlayerId) :
+                        playerResultsViewModel.AwayPlayerResults.Single(x => x.PlayerId == winByPlayer.Key.PlayerId);
+
+                    // get play count
+                    var playerResult = scorecard.PlayerResults.Single(p => p.PlayerId == winByPlayer.Key.PlayerId);
+
+                    var averageWins = winByPlayer.Value / playerResult.PlayCount;
+
+                    if (saveResults) playerResult.Wins = averageWins;
+                }
+
+                if (saveResults) _context.SaveChanges();
             }
 
-            foreach (var winByPlayer in winsByPlayer)
-            {
-                // get play count
-                var playerResult = scorecard.PlayerResults.Single(p => p.PlayerId == winByPlayer.Key.PlayerId);
-
-                var averageWins = winByPlayer.Value / playerResult.PlayCount;
-
-                playerResult.Wins = averageWins;
-            }
-
-            _context.SaveChanges();
+            return playerResultsViewModel;
         }
 
         public TeamResultsViewModel CalculateTeamResults(int scorecardId, bool saveResults)

@@ -7,11 +7,13 @@ namespace Mippa.ViewModels
 {
     public class PlayerResultsViewModel
     {
-        public ICollection<PlayerViewModel> Players { get; set; }
+        public ICollection<PlayerViewModel> HomePlayerResults { get; set; }
+        public ICollection<PlayerViewModel> AwayPlayerResults { get; set; }
 
         public PlayerResultsViewModel()
         {
-            Players = new HashSet<PlayerViewModel>();
+            HomePlayerResults = new List<PlayerViewModel>();
+            AwayPlayerResults = new List<PlayerViewModel>();
         }
     }
 }

@@ -4,11 +4,11 @@
             <h5>Match {{viewModel.index + 1}}</h5>
             <div class="row">
                 <div class="col-xs-6 text-center">
-                    <span>{{match.homePlayer.name}}</span> - <span>{{match.homePlayer.handicap}}</span> <strong [hidden]="!match.homeBreaking">(B)</strong>
+                    <span>{{match.homePlayer.name}}</span> <strong [hidden]="!match.homeBreaking">(B)</strong>
 
                 </div>
                 <div class="col-xs-6 text-center">
-                    <span>{{match.awayPlayer.name}}</span> - <span>{{match.awayPlayer.handicap}}</span> <strong [hidden]="match.homeBreaking">(B)</strong>
+                    <span>{{match.awayPlayer.name}}</span> <strong [hidden]="match.homeBreaking">(B)</strong>
 
                 </div>
             </div>

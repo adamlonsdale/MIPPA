@@ -40,6 +40,11 @@ export class ScorecardService {
             .map(res => res.json());
     }
 
+    GetPlayerResults(scorecardId: number): Observable<any> {
+        return this.http.get('/api/playerresult/' + scorecardId)
+            .map(res => res.json());
+    }
+
     GetTeamResults(scorecardId: number): Observable<any> {
         return this.http.get('/api/teamresult/' + scorecardId)
             .map(res => res.json());

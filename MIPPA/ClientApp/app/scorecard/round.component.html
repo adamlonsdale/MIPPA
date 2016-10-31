@@ -1,6 +1,7 @@
 ﻿<div class="row">
     <div *ngIf="scorecardState != 3" class="col-md-12">
         <p *ngIf="scorecardState == 2"><strong>Congratulations! </strong>All match scores are saved in the system.  Consider reviewing matches with the opposing team to change scores before you commit.</p>
+        <p *ngIf="scorecardState != 2"><strong>IMPORTANT! </strong> In order to complete the scorecard and have statistics calculated, you must save every match and then click the complete scorecard button below.  The button is enabled when all matches are saved which is indicated when there is no longer a save button present.</p>
         <button class="btn btn-sm btn-success" (click)="finalizeMatch()" [disabled]="scorecardState != 2">Complete Scorecard</button>
     </div>
 </div>

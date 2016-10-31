@@ -28,6 +28,7 @@ export class ScorecardComponent implements OnInit, OnDestroy {
     scorecard: Scorecard;
     matches: Array<PlayerMatchViewModel>;
     teamResults: TeamResultsViewModel;
+    playerResults: PlayerResultsViewModel;
     requiredPlayerCount: number;
     handicapsAreNotSet: boolean;
     playersWithNoHandicap: Array<PlayerViewModel>;
@@ -42,6 +43,7 @@ export class ScorecardComponent implements OnInit, OnDestroy {
         this.viewModel = new ScoreCardViewModel();
         this.scorecardId = -1;
         this.teamResults = new TeamResultsViewModel();
+        this.playerResults = new PlayerResultsViewModel();
         this.playersWithNoHandicap = new Array<PlayerViewModel>();
     }
 
@@ -76,6 +78,15 @@ export class ScorecardComponent implements OnInit, OnDestroy {
                 if (this.child != null && this.child != undefined) {
                     this.child.scorecardState = this.teamResults.scorecardState;
                 }
+            },
+            e => console.log(e.message),
+            () => {
+            });
+
+        this.scorecardService.GetPlayerResults(this.scorecardId)
+            .subscribe(
+            data => {
+                this.playerResults = data;
             },
             e => console.log(e.message),
             () => {
@@ -130,9 +141,9 @@ export class ScorecardComponent implements OnInit, OnDestroy {
                 if (this.viewModel.state == 0) {
                     this.checkHandicaps();
                 }
-            });
 
-        this.getTeamResults();
+                this.getTeamResults();
+            });
 
         this.lineup = new Lineup();
     }
@@ -189,6 +200,8 @@ export class ScorecardComponent implements OnInit, OnDestroy {
                         }
 
                         this.displayMatches();
+
+                        this.getTeamResults();
 
                         this.enteringLineup = false;
                     });
@@ -261,7 +274,14 @@ class PlayerViewModel {
     playerId: number;
     name: string;
     totalScore: number;
+    averageScore: number;
     handicap: number;
+    wins: number;
+}
+
+class PlayerResultsViewModel {
+    homePlayerResults: Array<PlayerViewModel> = [];
+    awayPlayerResults: Array<PlayerViewModel> = [];
 }
 
 class RoundViewModel {

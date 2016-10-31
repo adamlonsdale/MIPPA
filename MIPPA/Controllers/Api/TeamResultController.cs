@@ -30,7 +30,7 @@ namespace Mippa.Controllers.Api
         public void SaveTeamResults(int scorecardId)
         {
             _repository.CalculateTeamResults(scorecardId, true);
-            _repository.CalculatePlayerResults(scorecardId);
+            _repository.CalculatePlayerResults(scorecardId, true);
             _repository.FinalizeMatch(scorecardId);
         }
     }

@@ -10,6 +10,8 @@ namespace Mippa.ViewModels
         public int PlayerId { get; set; }
         public string Name { get; set; }
         public int TotalScore { get; set; }
+        public int AverageScore { get; set; }
         public int Handicap { get; set; }
+        public int Wins { get; set; }
     }
 }
