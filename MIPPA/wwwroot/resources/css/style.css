@@ -338,6 +338,16 @@ input[type=submit]:active {
     text-align: center;
 }
 
+.section-player-member {
+    background-color: #f5f5f5;
+}
+
+.section-player-member ul {
+    line-height: 145%;
+    width: 70%;
+    margin-left: 20%;
+}
+
 .section-leagues .manager-box {
     border: 2px solid #2980b9;
     border-radius: 10px;

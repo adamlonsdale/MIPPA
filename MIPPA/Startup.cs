@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Mippa.Models;
 using Microsoft.EntityFrameworkCore;
+using MIPPA.Models;
 
 namespace MIPPA
 {
@@ -38,8 +39,11 @@ namespace MIPPA
             services.AddApplicationInsightsTelemetry(Configuration);
             services.AddDbContext<MippaContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+
             // Add framework services.
             services.AddMvc();
+
             services.AddTransient<IRepository, Repository>();
         }
 
