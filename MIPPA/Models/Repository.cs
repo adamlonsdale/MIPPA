@@ -999,14 +999,7 @@ namespace Mippa.Models
                 return;
             }
 
-            _context.Teams.Add(
-                new Team
-                {
-                    Name = team.Name,
-                    SessionId = sessionId,
-                    Bye = team.Bye
-                }
-                );
+            _context.Teams.Add(team);
 
             _context.SaveChanges();
         }

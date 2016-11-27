@@ -1,4 +1,4 @@
-﻿import {Component, Input, Output, EventEmitter} from '@angular/core';
+﻿import {Component, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Player} from '../model/player';
 import {ScorecardService} from './scorecard.service';
@@ -31,6 +31,10 @@ export class SubstituteComponent {
                 }));
             });
         });
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        console.log(changes);
     }
 
     onAddAsSub() {

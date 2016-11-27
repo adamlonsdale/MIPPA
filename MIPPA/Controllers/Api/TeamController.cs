@@ -68,7 +68,7 @@ namespace Mippa.Controllers.Api
                 return BadRequest();
             }
             _repository.AddTeamToSession(team, sessionId);
-            return CreatedAtRoute("GetTeam", new { name = team.Name, sessionId = sessionId }, team);
+            return CreatedAtRoute("GetTeam", new { name = team.Name, sessionId = sessionId, teamId = team.TeamId }, team);
         }
 
         /// <summary>
