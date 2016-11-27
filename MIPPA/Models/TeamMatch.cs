@@ -12,6 +12,7 @@ namespace Mippa.Models
         public int ScheduleId { get; set; }
         public int HomeTeamId { get; set; }
         public int AwayTeamId { get; set; }
+        public string Location { get; set; }
 
         [JsonIgnore]
         public virtual Schedule Schedule { get; set; }

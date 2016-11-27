@@ -277,6 +277,14 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-xs-12">
+                        <p>Search the system for a player</p>
+                        <p>If the player exists, select from the list.</p>
+                        <p>If the player exists and has played in this session, the handicap is already known.  Otherwise you must set a handicap</p>
+                        <p>If the player does not exist, you must set the handicap.</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
                         <add-substitute [sessionId]="viewModel.sessionId"
                                         [teamId]="viewModel.awayTeamId"
                                         (onAdd)="lineup.awayPlayers.push($event); viewModel.awayPlayers.push($event);"

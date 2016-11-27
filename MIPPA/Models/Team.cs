@@ -15,12 +15,11 @@ namespace Mippa.Models
         public string UserName { get; set; }
         [JsonIgnore]
         public string Password { get; set; }
+        public int Index;
+        public bool Bye { get; set; }
 
         [JsonIgnore]
         public virtual Session Session { get; set; }
         public virtual ICollection<TeamRoster> Players { get; set; }
-
-        [NotMapped]
-        public int Index;
     }
 }

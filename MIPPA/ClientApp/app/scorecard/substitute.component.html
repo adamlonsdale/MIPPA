@@ -1,8 +1,4 @@
-﻿<p>Search the system for a player</p>
-<p>If the player exists, select from the list.</p>
-<p>If the player exists and has played in this session, the handicap is already known.  Otherwise you must set a handicap</p>
-<p>If the player does not exist, you must set the handicap.</p>
-<form>
+﻿<form>
     <div class="form-group">
         <label>Find Player</label>
         <input [(ngModel)]="asyncSelected"
@@ -41,6 +37,6 @@
     </div>
 </form>
 
-<button class="btn btn-sm btn-info" *ngIf="typeaheadNoResults===true" [disabled]="selectedHandicap < 4" (click)="onAddNew()" data-dismiss="modal">Add As Brand New and Substitute</button>
-<button class="btn btn-sm btn-info" *ngIf="typeaheadNoResults===false && selectedPlayer != null" [disabled]="selectedHandicap < 4" (click)="onAddAsSub()" data-dismiss="modal">Add Player As Substitue</button>
+<button class="btn btn-sm btn-info" *ngIf="typeaheadNoResults===true" [disabled]="selectedHandicap < 4" (click)="onAddNew()" data-dismiss="modal">Add Brand New</button>
+<button class="btn btn-sm btn-info" *ngIf="typeaheadNoResults===false && selectedPlayer != null" [disabled]="selectedHandicap < 4" (click)="onAddAsSub()" data-dismiss="modal">Add Existing Player</button>
 <button class="btn btn-sm btn-warning" *ngIf="selectedPlayer != null" (click)="selectedPlayer = null; asyncSelected = ''; selectedHandicap = 4; disableHandicap = true;">Start Over</button>

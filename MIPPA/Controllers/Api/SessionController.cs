@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Mippa.Models;
+using MIPPA.ViewModels;
 using System.Collections.Generic;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -22,7 +23,7 @@ namespace Mippa.Controllers.Api
         /// </summary>
         /// <returns>IEnumerable of Manager</returns>
         [HttpGet("{managerId}")]
-        public IEnumerable<Session> GetAll(int managerId)
+        public IEnumerable<ManageSessionViewModel> GetAll(int managerId)
         {
             return _repository.GetAllSessions(managerId);
         }

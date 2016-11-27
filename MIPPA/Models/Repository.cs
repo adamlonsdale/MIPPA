@@ -230,7 +230,7 @@ namespace Mippa.Models
                 {
                     sessionPlayerResultsDictionary[playerResult.Player].TotalScore += playerResult.Score;
                     sessionPlayerResultsDictionary[playerResult.Player].TotalWins += playerResult.Wins;
-                    sessionPlayerResultsDictionary[playerResult.Player].PlayCount ++;
+                    sessionPlayerResultsDictionary[playerResult.Player].PlayCount++;
                 }
                 else
                 {
@@ -319,17 +319,6 @@ namespace Mippa.Models
                 }
 
                 return playerResultsViewModel;
-            }
-
-            int rounds = 5;
-
-            if (scorecard.TeamMatch.Schedule.Session.MatchupType == MatchupType.FourOnFour)
-            {
-                rounds = 4;
-            }
-            else if (scorecard.TeamMatch.Schedule.Session.MatchupType == MatchupType.ThreeOnThree)
-            {
-                rounds = 3;
             }
 
             Dictionary<Player, int> scoresByPlayer = new Dictionary<Player, int>();
@@ -428,7 +417,7 @@ namespace Mippa.Models
                 // After going through each match, save the totals for each player
                 foreach (var scoreByPlayer in scoresByPlayer)
                 {
-                    var viewModel = 
+                    var viewModel =
                         scorecard.PlayerMatches.Any(x => x.HomePlayerId == scoreByPlayer.Key.PlayerId) ?
                         playerResultsViewModel.HomePlayerResults.Single(x => x.PlayerId == scoreByPlayer.Key.PlayerId) :
                         playerResultsViewModel.AwayPlayerResults.Single(x => x.PlayerId == scoreByPlayer.Key.PlayerId);
@@ -705,7 +694,7 @@ namespace Mippa.Models
             }
 
             // Check if all scores are greater than zero
-            if (!scorecard.PlayerMatches.Any(x=>x.Saved == false) && scorecard.State == ScorecardState.InProgress)
+            if (!scorecard.PlayerMatches.Any(x => x.Saved == false) && scorecard.State == ScorecardState.InProgress)
             {
                 scorecard.State = ScorecardState.Completed;
                 _context.SaveChanges();
@@ -767,7 +756,7 @@ namespace Mippa.Models
             var scorecard =
                 _context.Scorecards
                 .Include(x => x.TeamMatch)
-                .ThenInclude(x=>x.Scorecards)
+                .ThenInclude(x => x.Scorecards)
                 .Include(x => x.TeamMatch)
                 .ThenInclude(x => x.HomeTeam)
                 .ThenInclude(x => x.Players)
@@ -1014,21 +1003,10 @@ namespace Mippa.Models
                 new Team
                 {
                     Name = team.Name,
-                    SessionId = sessionId
+                    SessionId = sessionId,
+                    Bye = team.Bye
                 }
                 );
-            _context.SaveChanges();
-
-            var teamAdded = _context.Teams.Last();
-
-            foreach (var player in team.Players)
-                _context.TeamRosters.Add(
-                    new TeamRoster
-                    {
-                        PlayerId = player.PlayerId,
-                        TeamId = teamAdded.TeamId
-                    }
-                    );
 
             _context.SaveChanges();
         }
@@ -1101,13 +1079,13 @@ namespace Mippa.Models
                     x =>
                     new PlayerQueryViewModel
                     {
-                        ExistsInSession = 
+                        ExistsInSession =
                         (sessionId != null && sessionId.HasValue && _context.TeamRosters.Include(z => z.Team).Any(y => y.PlayerId == x.PlayerId && y.Team.SessionId == sessionId.Value)) ?
-                        true:
+                        true :
                         false,
                         Handicap =
                         (sessionId != null && sessionId.HasValue && _context.TeamRosters.Include(z => z.Team).Any(y => y.PlayerId == x.PlayerId && y.Team.SessionId == sessionId.Value)) ?
-                        _context.TeamRosters.Include(z => z.Team).First(y => y.PlayerId == x.PlayerId && y.Team.SessionId == sessionId.Value).Handicap:
+                        _context.TeamRosters.Include(z => z.Team).First(y => y.PlayerId == x.PlayerId && y.Team.SessionId == sessionId.Value).Handicap :
                         0,
                         Name = x.Name,
                         PlayerId = x.PlayerId
@@ -1222,12 +1200,6 @@ namespace Mippa.Models
 
         public void UpdateTeam(Team team)
         {
-            _logger.LogInformation("Updating TeamId: {0}...TeamName: {1}...NumPlayers: {2}",
-                team.TeamId,
-                team.Name,
-                team.Players.Count
-                );
-
             var teamFromContext =
                 _context.Teams
                 .Include(x => x.Players)
@@ -1240,39 +1212,48 @@ namespace Mippa.Models
             }
 
             teamFromContext.Name = team.Name;
+            teamFromContext.Bye = team.Bye;
 
-            // Also want to cross reference Players on the team
-            foreach (var playerFromContext in teamFromContext.Players.ToList())
+            if (teamFromContext.Bye && teamFromContext.Players.Count > 0)
             {
-                if (!team.Players.Any(x => x.PlayerId == playerFromContext.PlayerId))
-                {
-                    _logger.LogInformation("Deleting player: {0} from team: {1} with teamid: {2}.  As a cross reference the team id from client was {3}.",
-                        playerFromContext.Player.Name,
-                        teamFromContext.Name,
-                        teamFromContext.TeamId,
-                        team.TeamId
-                        );
-
-                    teamFromContext.Players.Remove(playerFromContext);
-                    _context.TeamRosters.Remove(playerFromContext);
-                }
+                _context.TeamRosters.RemoveRange(teamFromContext.Players.ToList());
             }
-
-            foreach (var player in team.Players)
+            else
             {
-                if (!teamFromContext.Players.Any(x => x.PlayerId == player.PlayerId))
-                {
-                    _logger.LogInformation("Adding player: {0} with playerid: {1}",
-                        player.Player.Name,
-                        player.PlayerId);
 
-                    _context.TeamRosters.Add(
-                        new TeamRoster
-                        {
-                            PlayerId = player.PlayerId,
-                            TeamId = team.TeamId
-                        }
-                        );
+                // Also want to cross reference Players on the team
+                foreach (var playerFromContext in teamFromContext.Players.ToList())
+                {
+                    if (!team.Players.Any(x => x.PlayerId == playerFromContext.PlayerId))
+                    {
+                        _logger.LogInformation("Deleting player: {0} from team: {1} with teamid: {2}.  As a cross reference the team id from client was {3}.",
+                            playerFromContext.Player.Name,
+                            teamFromContext.Name,
+                            teamFromContext.TeamId,
+                            team.TeamId
+                            );
+
+                        teamFromContext.Players.Remove(playerFromContext);
+                        _context.TeamRosters.Remove(playerFromContext);
+                    }
+                }
+
+                foreach (var player in team.Players)
+                {
+                    if (!teamFromContext.Players.Any(x => x.PlayerId == player.PlayerId))
+                    {
+                        _logger.LogInformation("Adding player: {0} with playerid: {1}",
+                            player.Player.Name,
+                            player.PlayerId);
+
+                        _context.TeamRosters.Add(
+                            new TeamRoster
+                            {
+                                PlayerId = player.PlayerId,
+                                TeamId = team.TeamId
+                            }
+                            );
+                    }
                 }
             }
 
@@ -1306,25 +1287,40 @@ namespace Mippa.Models
             return session;
         }
 
-        public IEnumerable<Session> GetAllSessions(int managerId)
+        public IEnumerable<ManageSessionViewModel> GetAllSessions(int managerId)
         {
             var sessions =
                 _context.Sessions
                 .Include(x => x.Teams)
                 .ThenInclude(x => x.Players)
                 .ThenInclude(x => x.Player)
-                .Include(x => x.Schedules)
-                .ThenInclude(x => x.Matches)
-                .ThenInclude(x => x.AwayTeam)
-                .Include(x => x.Schedules)
-                .ThenInclude(x => x.Matches)
-                .ThenInclude(x => x.HomeTeam)
-                .Include(x => x.Schedules)
-                .ThenInclude(x => x.Matches)
-                .ThenInclude(x => x.Scorecards)
                 .Where(x => x.ManagerId == managerId);
 
-            return sessions.AsEnumerable();
+            var sessionViewModels = new List<ManageSessionViewModel>();
+
+            foreach(var session in sessions)
+            {
+                sessionViewModels.Add(
+                    new ManageSessionViewModel
+                    {
+                        Name = session.Name,
+                        Format = session.Format,
+                        ManagerId = session.ManagerId,
+                        MatchupType = session.MatchupType,
+                        ScheduleCreated = session.ScheduleCreated,
+                        SessionId = session.SessionId,
+                        Teams = session.Teams.Select(
+                            x => 
+                            new TeamViewModel
+                            {
+                                TeamId = x.TeamId,
+                                Name = x.Name,
+                                Players = x.Players.Select(y => new PlayerViewModel { Name = y.Player.Name, Handicap = y.Handicap })
+                            }) });
+            }
+
+
+            return sessionViewModels.AsEnumerable();
         }
 
         public void UpdateSession(Session session)
@@ -1337,6 +1333,13 @@ namespace Mippa.Models
             }
 
             sessionFromContext.Name = session.Name;
+
+            // Only update these fields if the session has never been scheduled.
+            if (!sessionFromContext.ScheduleCreated)
+            {
+                sessionFromContext.Format = session.Format;
+                sessionFromContext.MatchupType = session.MatchupType;
+            }
 
             _context.SaveChanges();
         }
@@ -1386,7 +1389,11 @@ namespace Mippa.Models
 
             if (playerFromContext == null)
             {
-                return;
+                // Create a new player
+
+                _context.Players.Add(new Player { Name = player.Name });
+                _context.SaveChanges();
+                playerFromContext = _context.Players.Last();
             }
 
             var teamRoster =
@@ -1841,7 +1848,7 @@ namespace Mippa.Models
                 _context.PlayerMatches
                 .Include(x => x.HomePlayerScore)
                 .Include(x => x.AwayPlayerScore)
-                .Include(x=>x.Scorecard)
+                .Include(x => x.Scorecard)
                 .SingleOrDefault(x => x.PlayerMatchId == viewModel.PlayerMatchId);
 
             if (playerMatchFromContext == null)

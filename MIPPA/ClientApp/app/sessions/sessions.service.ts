@@ -11,13 +11,19 @@ import 'rxjs/Rx';
 @Injectable()
 export class SessionsService {
 
+    private headers: Headers;
+
     databasePath = '/api/session';
 
     sessionsChanged = new EventEmitter<Session[]>();
 
     private sessions: Session[] = [];
 
-    constructor(private http: Http) { }
+    constructor(private http: Http) {
+        this.headers = new Headers();
+        this.headers.append('Content-Type', 'application/json');
+        this.headers.append('Accept', 'application/json');
+    }
 
     getSessions() {
         return this.sessions;
@@ -34,12 +40,40 @@ export class SessionsService {
     }
 
     addSession(session: Session) {
-        this.sessions.push(session);
-        this.sessionsChanged.emit(this.sessions);
+        return this.http.post(
+            '/api/session/' + session.managerId,
+            JSON.stringify({
+                managerId: session.managerId,
+                name: session.name,
+                format: session.format,
+                matchuptype: session.matchupType
+            }),
+            { headers: this.headers })
+            .map(res => res.json())
+            .subscribe(
+            data => {
+                session.sessionId = data.sessionId
+                this.sessions.push(session);
+                this.sessionsChanged.emit(this.sessions);
+            }
+                );
     }
 
-    editSession(oldSession: Session, newSession: Session) {
-        this.sessions[this.sessions.indexOf(oldSession)] = newSession;
+    editSession(newSession: Session) {
+        return this.http.put(
+            '/api/session/' + newSession.sessionId,
+            JSON.stringify({
+                sessionId: newSession.sessionId,
+                managerId: newSession.managerId,
+                name: newSession.name,
+                format: newSession.format,
+                matchuptype: newSession.matchupType
+            }),
+            { headers: this.headers })
+            .subscribe(
+            data => {
+            }
+            );
     }
 
     storeSessions() {
@@ -67,13 +101,6 @@ export class SessionsService {
                 }
             }
             );
-    }
-
-    getCountries() {
-        return this.http.get('https://concept-d15cf.firebaseio.com/sessions.json')
-            .toPromise()
-            .then(res => <any[]>res.json())
-            .then(data => { return data; });
     }
 
     updateAllHandicapsForPlayerOnTeam(sessionId: number, playerId: number, handicap: number) {

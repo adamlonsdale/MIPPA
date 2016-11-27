@@ -8,55 +8,61 @@ import { TeamsService } from './teams.service';
 import { SessionsService } from '../sessions.service';
 
 @Component({
-  selector: 'cp-teams',
-  template: require('./teams.component.html')
+    selector: 'cp-teams',
+    template: require('./teams.component.html')
 })
 export class TeamsComponent implements OnInit, OnDestroy {
-  private subscription: Subscription;
-  private sessionId: number;
-  setOrder: boolean;
+    private subscription: Subscription;
+    private sessionId: number;
+    setOrder: boolean;
 
-  teams: Team[] = [];
+    teams: Team[] = [];
 
-  constructor(
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private teamsService: TeamsService,
-    private sessionsService: SessionsService) {
+    constructor(
+        private router: Router,
+        private activatedRoute: ActivatedRoute,
+        private teamsService: TeamsService,
+        private sessionsService: SessionsService) {
 
-    this.sessionsService.sessionsChanged.subscribe(
-      (sessions: any) => this.loadTeams()
-    );
-  }
+        this.sessionsService.sessionsChanged.subscribe(
+            (sessions: any) => this.loadTeams()
+        );
+    }
 
-  ngOnInit() {
-    this.subscription =
-      this.activatedRoute.parent.params.subscribe(
-        (params: any) => {
-          this.sessionId = +params['sessionId']
-          this.loadTeams()
-        }
-      );
-  }
+    ngOnInit() {
+        this.subscription =
+            this.activatedRoute.parent.params.subscribe(
+                (params: any) => {
+                    this.sessionId = +params['sessionId']
+                    this.loadTeams()
+                }
+            );
+    }
 
-  onAddTeam() {
-    this.teams.push(new Team('Team ' + (this.teams.length + 1), [], false));
-  }
+    onAddTeam() {
+        this.teamsService.addTeamToSession(
+            new Team(0, 'Team ' + (this.teams.length + 1), this.sessionId, [], false),
+            this.sessionId).subscribe(
+                data => this.teams.push(data));
+    }
 
-  onAddBye() {
-    this.teams.push(new Team('BYE', [], true));
-  }
+    onAddBye() {
+        this.teamsService.addTeamToSession(
+            new Team(0, 'BYE', this.sessionId, [], true),
+            this.sessionId).subscribe(
+            data => this.teams.push(data));
+    }
 
-  onSetOrder() {
-    this.setOrder = !this.setOrder;
-  }
+    onSetOrder() {
+        this.setOrder = !this.setOrder;
+    }
 
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
+    }
 
-  loadTeams() {
-    this.teams = this.teamsService.getTeamsFromSession(this.sessionId);
-  }
+    loadTeams() {
+        this.teams = this.teamsService.getTeamsFromSession(this.sessionId);
+    }
 
 }

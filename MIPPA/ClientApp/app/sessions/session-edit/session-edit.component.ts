@@ -1,34 +1,47 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { Session } from '../../model/session';
 
 import { NgForm } from '@angular/forms';
 
+import { Subscription } from 'RxJs';
+
 @Component({
-  selector: 'cp-session-edit',
-  template: require('./session-edit.component.html')
+    selector: 'cp-session-edit',
+    template: require('./session-edit.component.html')
 })
 export class SessionEditComponent implements OnInit {
-  @Input() session: Session;
-  @Output() onSessionSaved = new EventEmitter<Session>();
-  @Output() onSessionCancel = new EventEmitter<boolean>();
+    private subscription: Subscription;
 
-  constructor() { }
+    @Input() session: Session;
+    managerId: number;
+    @Output() onSessionSaved = new EventEmitter<Session>();
+    @Output() onSessionCancel = new EventEmitter<boolean>();
 
-  ngOnInit() {
-  }
+    constructor(private activatedRoute: ActivatedRoute) { }
 
-  onSubmit(form: any) {
-    console.log(form);
-    this.session.name = form.name;
-    this.session.format = form.format;
-    this.session.matchupType = form.matchup;
+    ngOnInit() {
+        this.subscription =
+            this.activatedRoute.params.subscribe(
+                (params: any) => {
+                    this.managerId = +params['managerId'];
+                }
+            );
+    }
 
-    this.onSessionSaved.emit(this.session);
-  }
+    onSubmit(form: any) {
+        console.log(form);
+        this.session.name = form.name;
+        this.session.format = form.format;
+        this.session.matchupType = form.matchup;
+        this.session.managerId = this.managerId;
 
-  onCancel() {
-    this.onSessionCancel.emit(true);
-  }
+        this.onSessionSaved.emit(this.session);
+    }
+
+    onCancel() {
+        this.onSessionCancel.emit(true);
+    }
 
 }

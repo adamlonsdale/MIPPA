@@ -53,7 +53,7 @@ namespace Mippa.Models
 
         void AddSession(Session session, int managerId);
         Session GetSession(int sessionId);
-        IEnumerable<Session> GetAllSessions(int managerId);
+        IEnumerable<ManageSessionViewModel> GetAllSessions(int managerId);
         void UpdateSession(Session session);
         Session RemoveSession(int id);
 

@@ -1,75 +1,88 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { Team } from '../../model/team';
 import { Player } from '../../model/player';
 
 import { SessionsService } from '../sessions.service';
+import { TeamsService } from './teams.service';
+
+import { Subscription } from 'RxJs';
 
 @Component({
-  selector: 'cp-team',
-  template: require('./team.component.html'),
-  styles: [require('./team.component.css')]
+    selector: 'cp-team',
+    template: require('./team.component.html'),
+    styles: [require('./team.component.css')]
 })
 export class TeamComponent implements OnInit {
-  @Input() team: Team;
-  @Input() collapsed: boolean;
-  editName: boolean;
-  playerAdd: boolean;
+    @Input() team: Team;
+    @Input() collapsed: boolean;
+    editName: boolean;
+    playerAdd: boolean;
+    sessionId: number;
 
-  newPlayer: Player;
-  selectedPlayer: Player;
+    private subscription: Subscription;
 
-  constructor(private sessionsService: SessionsService) {
-    this.newPlayer = new Player(0, '', 0);
-   }
+    newPlayer: Player;
+    selectedPlayer: Player;
 
-  ngOnInit() {
-  }
-
-  onEditName() {
-    this.editName = true;
-  }
-
-  onSaveName(value: any) {
-    this.team.name = value.name;
-
-    this.sessionsService.storeSessions()
-      .subscribe(
-      (res: any) => {
-
-      }
-      );
-    this.editName = false;
-  }
-
-  onCancel() {
-    this.editName = false;
-  }
-
-  onPlayerAdd() {
-    this.playerAdd = true;
-  }
-
-  onCancelPlayer() {
-    this.playerAdd = false;
-  }
-
-  onSubmitPlayer(player: Player) {
-
-    if (this.team.players == undefined) {
-      this.team.players = [];
+    constructor(private sessionsService: SessionsService, private teamsService: TeamsService, private activatedRoute: ActivatedRoute) {
+        this.newPlayer = new Player(0, '', 0);
     }
 
-    this.team.players.push(player);
-    this.playerAdd = false;
-  }
+    ngOnInit() {
+        this.subscription =
+            this.activatedRoute.parent.params.subscribe(
+                (params: any) => {
+                    this.sessionId = +params['sessionId'];
+                }
+            );
+    }
 
-  onOrderUp() {
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
+    }
 
-  }
+    onEditName() {
+        this.editName = true;
+    }
 
-  onOrderDown() {
+    onSaveName(value: any) {
+        this.team.name = value.name;
 
-  }
+        this.sessionsService.storeSessions()
+            .subscribe(
+            (res: any) => {
+
+            }
+            );
+
+        this.teamsService.updateTeam(this.team);
+        this.editName = false;
+    }
+
+    onCancel() {
+        this.editName = false;
+    }
+
+    onPlayerAdd() {
+        this.playerAdd = true;
+    }
+
+    onCancelPlayer() {
+        this.playerAdd = false;
+    }
+
+    addPlayerToTeam(player: any) {
+        this.team.players.push(player);
+    }
+
+    onOrderUp() {
+
+    }
+
+    onOrderDown() {
+
+    }
 
 }

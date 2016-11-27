@@ -8,9 +8,10 @@ using Mippa.Models;
 namespace MIPPA_Angular.Migrations
 {
     [DbContext(typeof(MippaContext))]
-    partial class MippaContextModelSnapshot : ModelSnapshot
+    [Migration("20161125163751_AddIndexAndLocation")]
+    partial class AddIndexAndLocation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
@@ -204,8 +205,6 @@ namespace MIPPA_Angular.Migrations
                 {
                     b.Property<int>("TeamId")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<bool>("Bye");
 
                     b.Property<string>("Name");
 

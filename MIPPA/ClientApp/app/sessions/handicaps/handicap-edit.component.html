@@ -1,12 +1,12 @@
 ﻿<td>
-    <button *ngIf="!editing" class="btn btn-sm btn-primary form-control" (click)="onEditClick()">Edit</button>
-    <button *ngIf="editing" href="#" class="btn btn-sm btn-success form-control" (click)="onEditClick(viewModel.playerId)"><i class="fa fa-2x fa-save"></i></button>
+    <button *ngIf="!editing" class="btn btn-sm btn-primary" (click)="onEditClick()">Edit</button>
+    <button *ngIf="editing" href="#" class="btn btn-sm btn-success" (click)="onEditClick(viewModel.playerId)"><i class="fa fa-2x fa-save"></i></button>
 </td>
 <td>{{viewModel.name}}</td>
 <td>
     <div *ngIf="!editing">{{viewModel.handicap}}</div>
     <div *ngIf="editing">
-        <select class="form-control" [(ngModel)]="viewModel.handicap">
+        <select [(ngModel)]="viewModel.handicap">
             <option>4</option>
             <option>5</option>
             <option>6</option>
