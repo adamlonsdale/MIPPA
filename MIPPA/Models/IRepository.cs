@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MIPPA.ViewModels;
+using MIPPA.ViewModels.Scheduler;
 
 namespace Mippa.Models
 {
@@ -19,6 +20,7 @@ namespace Mippa.Models
     /// </summary>
     public interface IRepository
     {
+        WeekViewModel GetWeekViewModel(int sessionId, int scheduleIndex);
         void FinalizeMatch(int scorecardId);
         LoginViewModel GetLoginViewModel(LoginViewModel viewModel);
         void FinalizeAllScorecards();

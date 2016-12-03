@@ -10,14 +10,14 @@
     </div>
 </div>
 <div class="row pre-scrollable" style="height: 250px">
-    <div class="col-xs-6 col-sm-6 col-md-3 defaul"><div class="team-box btn btn-default">1</div></div>
-    <div class="col-xs-6 col-sm-6 col-md-3"><div class="team-box btn btn-primary">2</div></div>
-    <div class="col-xs-6 col-sm-6 col-md-3"><div class="team-box btn btn-success">3</div></div>
-    <div class="col-xs-6 col-sm-6 col-md-3"><div class="team-box btn btn-info">4</div></div>
-    <div class="col-xs-6 col-sm-6 col-md-3"><div class="team-box">5</div></div>
-    <div class="col-xs-6 col-sm-6 col-md-3"><div class="team-box">6</div></div>
-    <div class="col-xs-6 col-sm-6 col-md-3"><div class="team-box">7</div></div>
-    <div class="col-xs-6 col-sm-6 col-md-3"><div class="team-box">8</div></div>
+    <div *ngFor="let team of viewModel?.teamViewModels" class="col-xs-6 col-sm-6 col-md-3">
+        <button class="team-box btn"
+                [class.btn-primary]="team === selectedAwayTeam"
+                [class.btn-success]="team === selectedHomeTeam"
+                (click)="selectTeam(team)">
+            {{team.name}}
+        </button>
+    </div>
 </div>
 <div class="row">
     <div class="col-xs-12">

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Mippa.ViewModels.Statistics;
 using MIPPA.ViewModels;
 using MIPPA.Utilities;
+using MIPPA.ViewModels.Scheduler;
 
 namespace Mippa.Models
 {
@@ -1291,7 +1292,7 @@ namespace Mippa.Models
 
             var sessionViewModels = new List<ManageSessionViewModel>();
 
-            foreach(var session in sessions)
+            foreach (var session in sessions)
             {
                 sessionViewModels.Add(
                     new ManageSessionViewModel
@@ -1303,13 +1304,14 @@ namespace Mippa.Models
                         ScheduleCreated = session.ScheduleCreated,
                         SessionId = session.SessionId,
                         Teams = session.Teams.Select(
-                            x => 
+                            x =>
                             new TeamViewModel
                             {
                                 TeamId = x.TeamId,
                                 Name = x.Name,
                                 Players = x.Players.Select(y => new PlayerViewModel { Name = y.Player.Name, Handicap = y.Handicap })
-                            }) });
+                            })
+                    });
             }
 
 
@@ -1869,6 +1871,82 @@ namespace Mippa.Models
             homePlayerScore = playerMatchFromContext.HomePlayerScore.Score;
             awayPlayerScore = playerMatchFromContext.AwayPlayerScore.Score;
             scorecardState = (int)playerMatchFromContext.Scorecard.State;
+        }
+
+        public WeekViewModel GetWeekViewModel(int sessionId, int scheduleIndex)
+        {
+            var session = 
+                _context.Sessions
+                .Include(x => x.Teams)
+                .SingleOrDefault(x => x.SessionId == sessionId);
+
+            if (session == null)
+            {
+                return null;
+            }
+
+            var schedule =
+                _context.Schedules
+                .Include(x => x.Matches)
+                .ThenInclude(x => x.AwayTeam)
+                .Include(x => x.Matches)
+                .ThenInclude(x => x.HomeTeam)
+                .SingleOrDefault(x => x.SessionId == sessionId && x.Index == scheduleIndex);
+
+            HashSet<int> scheduledTeams = new HashSet<int>();
+
+            var viewModel = new WeekViewModel();
+
+            
+            viewModel.MatchViewModels = new List<MatchViewModel>();
+
+            // Get corresponding matches if they exist on schedule now
+
+            if (schedule != null)
+            {
+                viewModel.Date = schedule.Date;
+                viewModel.Time = schedule.Time;
+
+                var teamMatches = schedule.Matches;
+
+                if (teamMatches != null && teamMatches.Count > 0)
+                {
+                    viewModel.MatchViewModels =
+                        teamMatches.Select(
+                            x =>
+                            new MatchViewModel
+                            {
+                                AwayTeamViewModel = new TeamViewModel { Name = x.AwayTeam.Name, TeamId = x.AwayTeamId },
+                                HomeTeamViewModel = new TeamViewModel { Name = x.HomeTeam.Name, TeamId = x.HomeTeamId }
+                            });
+
+                    foreach (var match in viewModel.MatchViewModels)
+                    {
+                        scheduledTeams.Add(match.HomeTeamViewModel.TeamId);
+                        scheduledTeams.Add(match.AwayTeamViewModel.TeamId);
+                    }
+                }
+            }
+            else
+            {
+                viewModel.Date = DateTime.Now.ToString("M/d/yyyy");
+            }
+            
+            // Get all the teams for the session
+
+            var teams = session.Teams.OrderBy(x => x.Index);
+
+            viewModel.TeamViewModels =
+                teams.Select(
+                    x =>
+                    new TeamViewModel
+                    {
+                        Name = x.Name,
+                        TeamId = x.TeamId,
+                        Scheduled = scheduledTeams.Contains(x.TeamId)
+                    });
+
+            return viewModel;
         }
     }
 }

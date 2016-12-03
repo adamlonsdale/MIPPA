@@ -15,7 +15,7 @@ namespace Mippa.Models
         public string UserName { get; set; }
         [JsonIgnore]
         public string Password { get; set; }
-        public int Index;
+        public int Index { get; set; }
         public bool Bye { get; set; }
 
         [JsonIgnore]

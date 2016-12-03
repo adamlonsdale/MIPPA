@@ -12,6 +12,7 @@ import { ScorecardService } from './scorecard/scorecard.service';
 import { HandicapsService } from './sessions/handicaps/handicaps.service';
 import { StatsService } from './sessions/statistics/stats.service';
 import { TestingService } from './testing/testing.service';
+import { SchedulerService } from './scheduler/scheduler.service';
 
 import { AppComponent } from './app.component';
 import { SessionsComponent } from './sessions/sessions.component';
@@ -66,7 +67,7 @@ import { Ng2BootstrapModule } from 'ng2-bootstrap/components';
         FormsModule,
         Ng2BootstrapModule
     ],
-    providers: [SessionsService, TeamsService, ScheduleService, LoginService, ScorecardService, HandicapsService, StatsService, TestingService],
+    providers: [SessionsService, TeamsService, ScheduleService, LoginService, ScorecardService, HandicapsService, StatsService, TestingService, SchedulerService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

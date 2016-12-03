@@ -16,6 +16,7 @@ namespace Mippa.Models
         public int SessionId { get; set; }
         public string Date { get; set; }
         public string Time { get; set; }
+        public int Index { get; set; }
 
         [JsonIgnore]
         public virtual Session Session { get; set; }
