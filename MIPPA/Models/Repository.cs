@@ -24,6 +24,69 @@ namespace Mippa.Models
             _logger = logger;
         }
 
+        public void PostMatchups(int sessionId, int scheduleIndex, IEnumerable<MatchViewModel> matchViewModels)
+        {
+            var schedule =
+                _context.Schedules
+                .Include(x => x.Session)
+                .Include(x => x.Matches)
+                .ThenInclude(x => x.Scorecards)
+                .SingleOrDefault(x => x.SessionId == sessionId && x.Index == scheduleIndex);
+
+            var currentMatchups = schedule.Matches;
+
+            // Before removing old matches, we have to make sure that there are no scorecards that were edited
+
+            bool hasScorecardsEdited = false;
+
+            foreach (var match in currentMatchups)
+            {
+                if (match.Scorecards.Any(x => x.State != ScorecardState.Initial))
+                {
+                    hasScorecardsEdited = true;
+                    break;
+                }
+            }
+
+            _context.TeamMatches.RemoveRange(currentMatchups);
+
+            _context.SaveChanges();
+
+            foreach (var match in matchViewModels)
+            {
+                var newMatch =
+                    new TeamMatch
+                    {
+                        AwayTeamId = match.AwayTeamViewModel.TeamId,
+                        HomeTeamId = match.HomeTeamViewModel.TeamId,
+                        Location = match.Location,
+                        Table = match.Table,
+                        ScheduleId = schedule.ScheduleId
+                    };
+
+                _context.TeamMatches.Add(newMatch);
+
+                _context.SaveChanges();
+
+                if (schedule.Session.Format == Format.EightBall ||
+                    schedule.Session.Format == Format.EightBallNineBall)
+                {
+                    _context.Scorecards.Add(new Scorecard { Format = Format.EightBall, State = ScorecardState.Initial, TeamMatchId = newMatch.TeamMatchId });
+                }
+
+                if (schedule.Session.Format == Format.NineBall ||
+                    schedule.Session.Format == Format.EightBallNineBall)
+                {
+                    newMatch.Scorecards.Add(new Scorecard { Format = Format.NineBall, State = ScorecardState.Initial, TeamMatchId = newMatch.TeamMatchId });
+
+                }
+
+                _context.SaveChanges();
+            }
+
+            
+        }
+
         public void ResetScorecard(int scorecardId)
         {
             _context.RemoveRange(_context.TeamResults.Where(x => x.ScorecardId == scorecardId).ToList());
@@ -1893,6 +1956,22 @@ namespace Mippa.Models
                 .ThenInclude(x => x.HomeTeam)
                 .SingleOrDefault(x => x.SessionId == sessionId && x.Index == scheduleIndex);
 
+            bool previousWeekExists =
+                _context.Schedules
+                .Include(x => x.Matches)
+                .ThenInclude(x => x.AwayTeam)
+                .Include(x => x.Matches)
+                .ThenInclude(x => x.HomeTeam)
+                .Any(x => x.SessionId == sessionId && x.Index == scheduleIndex - 1);
+
+            bool nextWeekExists =
+                _context.Schedules
+                .Include(x => x.Matches)
+                .ThenInclude(x => x.AwayTeam)
+                .Include(x => x.Matches)
+                .ThenInclude(x => x.HomeTeam)
+                .Any(x => x.SessionId == sessionId && x.Index == scheduleIndex + 1);
+
             HashSet<int> scheduledTeams = new HashSet<int>();
 
             var viewModel = new WeekViewModel();
@@ -1906,6 +1985,8 @@ namespace Mippa.Models
             {
                 viewModel.Date = schedule.Date;
                 viewModel.Time = schedule.Time;
+                viewModel.PreviousWeekExists = previousWeekExists;
+                viewModel.NextWeekExists = nextWeekExists;
 
                 var teamMatches = schedule.Matches;
 
@@ -1916,8 +1997,10 @@ namespace Mippa.Models
                             x =>
                             new MatchViewModel
                             {
-                                AwayTeamViewModel = new TeamViewModel { Name = x.AwayTeam.Name, TeamId = x.AwayTeamId },
-                                HomeTeamViewModel = new TeamViewModel { Name = x.HomeTeam.Name, TeamId = x.HomeTeamId }
+                                AwayTeamViewModel = new TeamViewModel { Name = x.AwayTeam.Name, TeamId = x.AwayTeamId, Index = x.AwayTeam.Index },
+                                HomeTeamViewModel = new TeamViewModel { Name = x.HomeTeam.Name, TeamId = x.HomeTeamId, Index = x.HomeTeam.Index },
+                                Location = x.Location,
+                                Table = x.Table
                             });
 
                     foreach (var match in viewModel.MatchViewModels)
@@ -1943,7 +2026,8 @@ namespace Mippa.Models
                     {
                         Name = x.Name,
                         TeamId = x.TeamId,
-                        Scheduled = scheduledTeams.Contains(x.TeamId)
+                        Scheduled = scheduledTeams.Contains(x.TeamId),
+                        Index = x.Index
                     });
 
             return viewModel;

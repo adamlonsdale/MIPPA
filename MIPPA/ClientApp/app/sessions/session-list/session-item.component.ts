@@ -30,6 +30,10 @@ export class SessionItemComponent implements OnInit {
         this.router.navigate([this.sessionId, 'manage', 'teams'], { relativeTo: this.activatedRoute });
     }
 
+    onCreateSchedule() {
+        this.router.navigate(['/app', 'scheduler', this.sessionId, '1']);
+    }
+
     getFormat() {
         if (this.session.format == 0) {
             return "8-Ball";

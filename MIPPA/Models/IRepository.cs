@@ -20,6 +20,7 @@ namespace Mippa.Models
     /// </summary>
     public interface IRepository
     {
+        void PostMatchups(int sessionId, int scheduleIndex, IEnumerable<MatchViewModel> matchViewModels);
         WeekViewModel GetWeekViewModel(int sessionId, int scheduleIndex);
         void FinalizeMatch(int scorecardId);
         LoginViewModel GetLoginViewModel(LoginViewModel viewModel);

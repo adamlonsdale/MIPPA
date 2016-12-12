@@ -13,5 +13,6 @@ namespace MIPPA.ViewModels
         public int TeamId { get; set; }
         public IEnumerable<PlayerViewModel> Players { get; set; }
         public bool Scheduled { get; set; }
+        public int Index { get; set; }
     }
 }

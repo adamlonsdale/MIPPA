@@ -6,6 +6,7 @@ import { Subscription } from 'RxJs';
 import { SchedulerService } from './scheduler.service';
 import { WeekViewModel } from '../model/weekviewmodel';
 import { TeamViewModel } from '../model/teamviewmodel';
+import { MatchViewModel } from '../model/matchviewmodel';
 
 @Component({
     selector: 'scheduler',
@@ -17,6 +18,13 @@ export class SchedulerComponent implements OnInit, OnDestroy {
     sessionId: number;
     scheduleIndex: number;
     viewModel: WeekViewModel;
+
+    previousWeekExists: boolean;
+    nextWeekExists: boolean;
+
+    editingLocation: boolean;
+    editingTable: boolean;
+    editingDate: boolean;
 
     selectedHomeTeam: TeamViewModel;
     selectedAwayTeam: TeamViewModel;
@@ -41,12 +49,41 @@ export class SchedulerComponent implements OnInit, OnDestroy {
         this.subscription.unsubscribe();
     }
 
+    addToMatchup() {
+        if (this.selectedAwayTeam != null && this.selectedHomeTeam != null) {
+            this.viewModel.matchViewModels.push(new MatchViewModel(this.selectedHomeTeam, this.selectedAwayTeam, "", ""));
+
+            this.selectedAwayTeam.scheduled = true;
+            this.selectedHomeTeam.scheduled = true;
+
+            this.selectedAwayTeam = null;
+            this.selectedHomeTeam = null;
+        }
+    }
+
+    startOver() {
+        this.viewModel.matchViewModels = new Array<MatchViewModel>();
+
+        for (let team of this.viewModel.teamViewModels) {
+            team.scheduled = false;
+        }
+    }
+
+    saveMatchups() {
+        this.schedulerService.PostMatchups(this.sessionId, this.scheduleIndex, this.viewModel.matchViewModels)
+            .subscribe(data => { });
+    }
+
     selectTeam(team: TeamViewModel) {
-        if (this.selectedHomeTeam == null) {
+        if (this.selectedAwayTeam == null) {
+            this.selectedAwayTeam = team;
+        }
+        else if (this.selectedHomeTeam == null) {
             this.selectedHomeTeam = team;
         }
-        else if (this.selectedAwayTeam == null) {
+        else {
             this.selectedAwayTeam = team;
+            this.selectedHomeTeam = null;
         }
 
     }

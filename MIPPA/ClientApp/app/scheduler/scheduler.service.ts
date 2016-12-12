@@ -7,6 +7,7 @@ import 'rxjs/add/operator/timeout';
 import 'rxjs/add/operator/retryWhen';
 
 import { WeekViewModel } from '../model/weekviewmodel';
+import { MatchViewModel } from '../model/matchviewmodel';
 
 @Injectable()
 export class SchedulerService {
@@ -20,6 +21,14 @@ export class SchedulerService {
 
     GetWeekViewModel(sessionId: number, scheduleIndex: number): Observable<WeekViewModel> {
         return this.http.get('/api/scheduler/' + sessionId + '/' + scheduleIndex)
+            .map(res => res.json());
+    }
+
+    PostMatchups(sessionId: number, scheduleIndex: number, matchViewModels: Array<MatchViewModel>): Observable<any> {
+        return this.http.post(
+            '/api/scheduler/' + sessionId + '/' + scheduleIndex,
+            JSON.stringify(matchViewModels),
+            { headers: this.headers })
             .map(res => res.json());
     }
 }

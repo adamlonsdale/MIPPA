@@ -9,8 +9,8 @@ namespace MIPPA.ViewModels.Scheduler
     {
         public string Date { get; set; }
         public  string Time { get; set; }
-        public WeekViewModel PreviousWeekViewModel { get; set; }
-        public WeekViewModel NextWeekViewModel { get; set; }
+        public bool PreviousWeekExists { get; set; }
+        public bool NextWeekExists { get; set; }
 
         // Collection of Matches
         public IEnumerable<MatchViewModel> MatchViewModels { get; set; }

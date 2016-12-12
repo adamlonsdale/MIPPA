@@ -2,11 +2,21 @@
     <div class="col-xs-4">
         <button class="btn btn-sm btn-primary">Previous Week</button>
     </div>
-    <div class="col-xs-4 text-center">
-        <h3>November 27, 2016</h3>
+    <div *ngIf="editingDate" class="col-xs-4 text-center">
+        <input type="date" [(ngModel)]="viewModel.date" />
+        <button class="btn btn-sm btn-success" (click)="editingDate = false">Save Date</button>
+    </div>
+    <div *ngIf="!editingDate" class="col-xs-4 text-center">
+        <span>{{viewModel?.date}}</span>
+        <i class="glyphicon glyphicon-edit" (click)="editingDate = true"></i> Edit Date
     </div>
     <div class="col-xs-4">
         <button class="btn btn-sm btn-primary pull-right">Next Week</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 text-center">
+        <h4>{{selectedAwayTeam?.index}} @ {{selectedHomeTeam?.index}}</h4>
     </div>
 </div>
 <div class="row pre-scrollable" style="height: 250px">
@@ -14,9 +24,17 @@
         <button class="team-box btn"
                 [class.btn-primary]="team === selectedAwayTeam"
                 [class.btn-success]="team === selectedHomeTeam"
-                (click)="selectTeam(team)">
-            {{team.name}}
+                (click)="selectTeam(team)"
+                [disabled]="team.scheduled">
+            {{team.index}}
         </button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <button class="btn btn-sm btn-success" (click)="addToMatchup()">Add to matchups</button>
+        <button class="btn btn-sm btn-success" (click)="saveMatchups()">Save Matchups</button>
+        <button class="btn btn-sm btn-danger" (click)="startOver()">Start Over</button>
     </div>
 </div>
 <div class="row">
@@ -30,10 +48,24 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1 @ 3</td>
-                    <td>Anazeh Sands East</td>
-                    <td>1</td>
+                <tr *ngFor="let match of viewModel?.matchViewModels">
+                    <td>{{match.awayTeamViewModel?.index}} @ {{match.homeTeamViewModel?.index}}</td>
+                    <td *ngIf="editingLocation">
+                        <input type="text" [(ngModel)]="match.location"/>
+                        <button class="btn btn-sm btn-primary" (click)="editingLocation = false">Update</button>
+                    </td>
+                    <td *ngIf="!editingLocation">
+                        <span>{{match.location}}</span>
+                        <i class="glyphicon glyphicon-edit" (click)="editingLocation = true"></i>
+                    </td>
+                    <td *ngIf="editingTable">
+                        <input type="text" [(ngModel)]="match.table" />
+                        <button class="btn btn-sm btn-primary" (click)="editingTable = false">Update</button>
+                    </td>
+                    <td *ngIf="!editingTable">
+                        <span>{{match.table}}</span>
+                        <i class="glyphicon glyphicon-edit" (click)="editingTable = true"></i>
+                    </td>
                 </tr>
             </tbody>
         </table>

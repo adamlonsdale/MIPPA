@@ -9,5 +9,7 @@ namespace MIPPA.ViewModels.Scheduler
     {
         public TeamViewModel HomeTeamViewModel { get; set; }
         public TeamViewModel AwayTeamViewModel { get; set; }
+        public string Location { get; set; }
+        public string Table { get; set; }
     }
 }
