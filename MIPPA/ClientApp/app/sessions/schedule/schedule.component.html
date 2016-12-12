@@ -10,7 +10,8 @@
             <div class="list-group">
                 <div *ngFor="let match of schedule.matches" class="list-group-item">
                     <div class="list-group-item-heading">
-                        <h6>Table: Not Assigned</h6>
+                        <h6>Location: {{match.location}}</h6>
+                        <h6>Table: {{match.table}}</h6>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 col-md-9">
