@@ -2,11 +2,10 @@
     <div class="col-md-12">
                 <button class="btn btn-sm btn-primary" (click)="onAddTeam()">Add Team <i class="fa fa-users"></i></button>
                 <button class="btn btn-sm btn-danger" (click)="onAddBye()">Add Bye <i class="fa fa-usd"></i></button>
-                <button class="btn btn-sm btn-info" (click)="onSetOrder()">Order <i class="fa fa-sort"></i></button>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12" *ngFor="let team of teams">
-        <cp-team [team]="team" [collapsed]="setOrder"></cp-team>
+        <cp-team [team]="team"></cp-team>
     </div>
 </div>

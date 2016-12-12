@@ -24,7 +24,7 @@ namespace Mippa.Models
             _logger = logger;
         }
 
-        public void PostMatchups(int sessionId, int scheduleIndex, IEnumerable<MatchViewModel> matchViewModels)
+        public void PostMatchups(int sessionId, int scheduleIndex, WeekViewModel viewModel)
         {
             var schedule =
                 _context.Schedules
@@ -32,6 +32,28 @@ namespace Mippa.Models
                 .Include(x => x.Matches)
                 .ThenInclude(x => x.Scorecards)
                 .SingleOrDefault(x => x.SessionId == sessionId && x.Index == scheduleIndex);
+
+            if (schedule == null)
+            {
+                _context.Schedules.Add(
+                    new Schedule
+                    {
+                        Index = scheduleIndex,
+                        SessionId = sessionId
+                    });
+
+                _context.SaveChanges();
+
+                schedule =
+                    _context.Schedules
+                    .Include(x => x.Session)
+                    .Include(x => x.Matches)
+                    .ThenInclude(x => x.Scorecards)
+                    .SingleOrDefault(x => x.SessionId == sessionId && x.Index == scheduleIndex);
+            }
+
+            schedule.Date = viewModel.Date;
+            schedule.Time = viewModel.Time;
 
             var currentMatchups = schedule.Matches;
 
@@ -52,7 +74,7 @@ namespace Mippa.Models
 
             _context.SaveChanges();
 
-            foreach (var match in matchViewModels)
+            foreach (var match in viewModel.MatchViewModels)
             {
                 var newMatch =
                     new TeamMatch
@@ -1062,6 +1084,15 @@ namespace Mippa.Models
             {
                 return;
             }
+
+            int index = 1;
+
+            if (_context.Teams.Where(x => x.SessionId == sessionId).Count() > 0)
+            {
+                index = _context.Teams.Where(x => x.SessionId == sessionId).Count() + 1;
+            }
+
+            team.Index = index;
 
             _context.Teams.Add(team);
 

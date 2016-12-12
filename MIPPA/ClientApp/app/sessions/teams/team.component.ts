@@ -16,7 +16,6 @@ import { Subscription } from 'RxJs';
 })
 export class TeamComponent implements OnInit {
     @Input() team: Team;
-    @Input() collapsed: boolean;
     editName: boolean;
     playerAdd: boolean;
     sessionId: number;
@@ -75,14 +74,6 @@ export class TeamComponent implements OnInit {
 
     addPlayerToTeam(player: any) {
         this.team.players.push(player);
-    }
-
-    onOrderUp() {
-
-    }
-
-    onOrderDown() {
-
     }
 
 }

@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subscription } from 'RxJs';
 
@@ -29,7 +29,7 @@ export class SchedulerComponent implements OnInit, OnDestroy {
     selectedHomeTeam: TeamViewModel;
     selectedAwayTeam: TeamViewModel;
 
-    constructor(private activatedRoute: ActivatedRoute, private schedulerService: SchedulerService) {
+    constructor(private activatedRoute: ActivatedRoute, private schedulerService: SchedulerService, private router: Router) {
     }
 
     ngOnInit() {
@@ -69,8 +69,20 @@ export class SchedulerComponent implements OnInit, OnDestroy {
         }
     }
 
+    gotoPreviousWeek() {
+        this.router.navigate(['/', 'app', 'scheduler', this.sessionId, this.scheduleIndex - 1]);
+        this.scheduleIndex = this.scheduleIndex - 1;
+    }
+
+    gotoNextWeek() {
+        this.router.navigate(['/', 'app', 'scheduler', this.sessionId, this.scheduleIndex + 1]);
+        this.scheduleIndex = this.scheduleIndex + 1;
+        this.schedulerService.GetWeekViewModel(this.sessionId, this.scheduleIndex)
+            .subscribe(data => this.viewModel = data);
+    }
+
     saveMatchups() {
-        this.schedulerService.PostMatchups(this.sessionId, this.scheduleIndex, this.viewModel.matchViewModels)
+        this.schedulerService.PostMatchups(this.sessionId, this.scheduleIndex, this.viewModel)
             .subscribe(data => { });
     }
 

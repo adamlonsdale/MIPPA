@@ -1,17 +1,18 @@
 ﻿<div class="row">
     <div class="col-xs-4">
-        <button class="btn btn-sm btn-primary">Previous Week</button>
+        <button class="btn btn-sm btn-primary" (click)="gotoPreviousWeek()" [disabled]="!previousWeekExists">Previous Week</button>
     </div>
     <div *ngIf="editingDate" class="col-xs-4 text-center">
-        <input type="date" [(ngModel)]="viewModel.date" />
-        <button class="btn btn-sm btn-success" (click)="editingDate = false">Save Date</button>
+        Date: <input type="text" [(ngModel)]="viewModel.date" />
+        Time: <input type="text" [(ngModel)]="viewModel.time" />
+        <button class="btn btn-sm btn-success" (click)="editingDate = false">Save Date and Time</button>
     </div>
     <div *ngIf="!editingDate" class="col-xs-4 text-center">
-        <span>{{viewModel?.date}}</span>
-        <i class="glyphicon glyphicon-edit" (click)="editingDate = true"></i> Edit Date
+        <span>{{viewModel?.date}} @ {{viewModel?.time}}</span>
+        <i class="glyphicon glyphicon-edit" (click)="editingDate = true"></i> Edit Date and Time
     </div>
     <div class="col-xs-4">
-        <button class="btn btn-sm btn-primary pull-right">Next Week</button>
+        <button class="btn btn-sm btn-primary pull-right" (click)="gotoNextWeek()">Next Week</button>
     </div>
 </div>
 <div class="row">

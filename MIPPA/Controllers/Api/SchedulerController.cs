@@ -36,9 +36,9 @@ namespace MIPPA.Controllers.Api
 
         // POST api/values
         [HttpPost("{sessionId}/{scheduleIndex}")]
-        public IActionResult Post(int sessionId, int scheduleIndex, [FromBody]IEnumerable<MatchViewModel> matchViewModels)
+        public IActionResult Post(int sessionId, int scheduleIndex, [FromBody]WeekViewModel viewModel)
         {
-            _repository.PostMatchups(sessionId, scheduleIndex, matchViewModels);
+            _repository.PostMatchups(sessionId, scheduleIndex, viewModel);
 
             return new JsonResult("Success");
         }

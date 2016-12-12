@@ -24,10 +24,10 @@ export class SchedulerService {
             .map(res => res.json());
     }
 
-    PostMatchups(sessionId: number, scheduleIndex: number, matchViewModels: Array<MatchViewModel>): Observable<any> {
+    PostMatchups(sessionId: number, scheduleIndex: number, viewModel: WeekViewModel): Observable<any> {
         return this.http.post(
             '/api/scheduler/' + sessionId + '/' + scheduleIndex,
-            JSON.stringify(matchViewModels),
+            JSON.stringify(viewModel),
             { headers: this.headers })
             .map(res => res.json());
     }

@@ -14,7 +14,6 @@ import { SessionsService } from '../sessions.service';
 export class TeamsComponent implements OnInit, OnDestroy {
     private subscription: Subscription;
     private sessionId: number;
-    setOrder: boolean;
 
     teams: Team[] = [];
 
@@ -51,10 +50,6 @@ export class TeamsComponent implements OnInit, OnDestroy {
             new Team(0, 'BYE', this.sessionId, [], true),
             this.sessionId).subscribe(
             data => this.teams.push(data));
-    }
-
-    onSetOrder() {
-        this.setOrder = !this.setOrder;
     }
 
     ngOnDestroy() {

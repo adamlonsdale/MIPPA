@@ -1,17 +1,12 @@
 <div class="panel clearfix" [class.panel-default]="!this.team.bye" [class.panel-danger]="this.team.bye">
 	<div class="panel-heading">
 		<div *ngIf="!editName">
-			<div *ngIf="!this.team.bye && !collapsed">
+			<div *ngIf="!this.team.bye">
 				<h6>{{team.name}} <i class="fa fa-pencil-square-o fa-2x" (click)="onEditName()"></i></h6>
 			</div>
-			<div *ngIf="this.team.bye || collapsed" [class.pull-left]="collapsed">
+			<div *ngIf="this.team.bye">
 				<h6>{{team.name}}</h6>
 			</div>
-			<div *ngIf="collapsed" class="pull-right">
-				<i class="fa fa-3x fa-arrow-circle-o-up" style="vertical-align: middle" (click)="onOrderUp()"></i>
-				<i class="fa fa-3x fa-arrow-circle-o-down" style="vertical-align: middle; margin-left: 15px;" (click)="onOrderDown()"></i>
-			</div>
-			<div *ngIf="collapsed" class="clearfix"></div>
 		</div>
 		<div *ngIf="editName">
 			<form class="form-inline" (ngSubmit)="onSaveName(teamedit.value)" #teamedit="ngForm">
@@ -23,7 +18,7 @@
 			</form>
 		</div>
 	</div>
-	<div class="panel-body clearfix" *ngIf="!collapsed">
+	<div class="panel-body clearfix">
 		<div *ngIf="!this.team.bye">
 			<div>
 				<button type="button" class="btn btn-sm btn-danger" [attr.data-target]="'#addPlayer' + team.teamId" data-toggle="modal"><i class="fa fa-2x fa-user-plus"></i></button>
