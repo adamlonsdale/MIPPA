@@ -8,29 +8,14 @@ using Mippa.Models;
 namespace MIPPA_Angular.Migrations
 {
     [DbContext(typeof(MippaContext))]
-    partial class MippaContextModelSnapshot : ModelSnapshot
+    [Migration("20170110025453_LeagueInfo")]
+    partial class LeagueInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("MIPPA.Models.LeagueInformation", b =>
-                {
-                    b.Property<int>("LeagueInformationId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AdminFund");
-
-                    b.Property<int>("PlayerCount");
-
-                    b.Property<string>("PlayerFund");
-
-                    b.HasKey("LeagueInformationId");
-
-                    b.ToTable("LeagueInformation");
-                });
 
             modelBuilder.Entity("Mippa.Models.Manager", b =>
                 {

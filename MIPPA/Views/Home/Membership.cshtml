@@ -19,14 +19,13 @@
     <title>MIPPA</title>
 </head>
 <body>
-    <header>
+    <header id="main-header">
         <nav>
             <div class="row">
                 <ul class="main-nav js--main-nav">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">News</a></li>
+                    <li><a asp-action="index">Home</a></li>
                     <li><a asp-action="membership">Memberships</a></li>
-                    <li><a href="#">Tournaments</a></li>
+                    <li><a asp-action="tournaments">State Tournament</a></li>
                     <li><a asp-action="leagues">Leagues</a></li>
                     <li><a asp-controller="app" asp-action="login">Managers</a></li>
                 </ul>
@@ -40,18 +39,6 @@
         </nav>
     </header>
 
-    <section id="about" class="section-benefits js--section-about">
-        <div class="row">
-            <h2>MIPPA Membership (COMING SOON)</h2>
-            <p class="long-copy">
-                Become a member of the MIPPA for one year.  Fill out the form for information.
-            </p>
-        </div>
-        <div class="row">
-
-        </div>
-    </section>
-
     <section class="section-player-member js--section-contact">
         <div class="row">
             <h2>Player Membership</h2>
@@ -60,7 +47,7 @@
             </p>
             <br />
             <p class="long-copy">
-                To become a Player Members you must fill out the form below and submit.  You will receive a reply with your given handicap.  Once you receive your handicap you may submit payment and your name will appear on the Player Member page at <a href="www.michiganpooltournament.com">Michigan Pool Tournament</a>
+                To become a Player Member you must fill out the form below and submit.  You will receive a reply with your given handicap.  Once you receive your handicap you may submit payment and your name will appear on the Player Member page at <a href="www.michiganpooltournament.com">Michigan Pool Tournament</a>
             </p>
             <br />
             <p class="long-copy">
@@ -73,11 +60,10 @@
             <ul>
                 <li>Singles</li>
                 <li>Scotch Doubles with a santioned partner</li>
-                <li>Team Event with 4 santioned members</li>
             </ul>
             <br />
             <p class="long-copy">
-                Cost is $45 plus regular entry fees at tournament.
+                Cost is $50 plus regular entry fees at tournament.
             </p>
             <br />
         </div>
@@ -181,7 +167,6 @@
         $(document).ready(function () {
             $("#SubmitPlayerMember").on("click", function () {
                 alert("Thank you, your information has been sent to MIPPA!");
-
             });
 
         })

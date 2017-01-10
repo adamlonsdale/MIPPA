@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using MIPPA.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,5 +84,6 @@ namespace Mippa.Models
         public DbSet<TeamMatch> TeamMatches { get; set; }
         public DbSet<TeamResult> TeamResults { get; set; }
         public DbSet<ResetRequest> ResetRequests { get; set; }
+        public DbSet<LeagueInformation> LeagueInformation { get; set; }
     }
 }

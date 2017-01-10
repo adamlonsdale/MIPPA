@@ -1,18 +1,18 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Mippa.Models;
+using MIPPA.Models;
+using MIPPA.ViewModels.Membership;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Mippa.Models;
-using Microsoft.EntityFrameworkCore;
-using MIPPA.ViewModels.Membership;
-using System.Net.Http;
-using MIPPA.Models;
-using System.Text;
-using System.Net.Http.Headers;
-using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MIPPA.Controllers.Web
 {
@@ -29,7 +29,14 @@ namespace MIPPA.Controllers.Web
 
         public IActionResult Index()
         {
-            return View();
+            var leagueInfo = _context.LeagueInformation.FirstOrDefault();
+
+            if (leagueInfo == null)
+            {
+                leagueInfo = new Models.LeagueInformation();
+            }
+
+            return View(leagueInfo);
         }
 
         public IActionResult Leagues()
@@ -37,6 +44,11 @@ namespace MIPPA.Controllers.Web
             var managers = _context.Managers.Include(x => x.Sessions);
 
             return View(managers);
+        }
+
+        public IActionResult Tournaments()
+        {
+            return View();
         }
 
         public IActionResult Membership()

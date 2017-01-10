@@ -1,0 +1,128 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="">
+
+    <link rel="stylesheet" type="text/css" href="~/vendors/css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="~/vendors/css/grid.css">
+    <link rel="stylesheet" type="text/css" href="~/vendors/css/ionicons.min.css">
+    <link rel="stylesheet" type="text/css" href="~/vendors/css/animate.css">
+    <link rel="stylesheet" type="text/css" href="~/resources/css/style.css">
+    <link rel="stylesheet" type="text/css" href="~/resources/css/queries.css">
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,300,100,300italic' rel='stylesheet' type='text/css'>
+    <title>MIPPA</title>
+    <style>
+        .main-nav li a:link,
+        .main-nav li a:visited {
+            padding: 8px 0;
+            color: #e67e22;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 90%;
+            border-bottom: 2px solid transparent;
+            -webkit-transition: border-bottom 0.2s;
+            transition: border-bottom 0.2s;
+        }
+
+        .main-nav li a:hover,
+        .main-nav li a:active {
+            border-bottom: 2px solid #e67e22;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="row">
+                <ul class="main-nav js--main-nav">
+                    <li><a asp-action="index">Home</a></li>
+                    <li><a asp-action="membership">Memberships</a></li>
+                    <li><a href="#">State Tournament</a></li>
+                    <li><a asp-action="leagues">Leagues</a></li>
+                    <li><a asp-controller="app" asp-action="login">Managers</a></li>
+                </ul>
+                <a class="mobile-nav-icon js--nav-icon"><i class="ion-navicon-round"></i></a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section id="content" class="">
+            <div class="row">
+                <h2>2nd Annual MIPPA State Tournament - 2017</h2>
+                <p>Below are the flyers that you can print out and submit for the upcoming tournament</p>
+                <div>
+                    <br />
+                    <ul>
+                        <li><a href="~/downloads/2017 State Flyer.pdf">2017 State Flyer</a></li>
+                        <li><a href="~/downloads/State 8 ball entry.pdf">2017 State 8 Ball Entry</a></li>
+                        <li><a href="~/downloads/State Scotch entry.pdf">2017 State Scotch Doubles Entry</a></li>
+                        <li><a href="~/downloads/State Team entry.pdf">2017 State Team Entry</a></li>
+                    </ul>
+                </div>
+                <br />
+                <h3>Alternate Download</h3>
+                <p>
+                    If you are unable to access attachments on this page please <a href="https://www.dropbox.com/sh/jx84yup60ab6wej/AACkJqEvMm-22tKl2G5UtGwQa?dl=0">Click Here.</a>
+                </p>
+                <br />
+                <h2>Important</h2>
+                <p>The Casino will be full due to a Show going on in the Event Center.  Please book your rooms early, they will sell out.</p>
+            </div>
+        </section>
+    </div>
+
+
+    <footer>
+        <div class="row">
+            <div class="col span-1-of-2">
+                <ul class="footer-nav">
+                    <li><a href="#">About us</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Press</a></li>
+                </ul>
+            </div>
+            <div class="col span-1-of-2">
+                <ul class="social-links">
+                    <li><a href="#"><i class="ion-social-facebook"></i></a></li>
+                    <li><a href="#"><i class="ion-social-twitter"></i></a></li>
+                    <li><a href="#"><i class="ion-social-googleplus"></i></a></li>
+                    <li><a href="#"><i class="ion-social-instagram"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <p>
+                Copyright &copy; 2016 by MIPPA. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
+    <script src="//cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.jsdelivr.net/selectivizr/1.0.3b/selectivizr.min.js"></script>
+    <script src="~/vendors/js/jquery.waypoints.min.js"></script>
+    <script src="~/resources/js/script.js"></script>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-61026110-2', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>

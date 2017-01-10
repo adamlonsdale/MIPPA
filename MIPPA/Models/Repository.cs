@@ -59,13 +59,13 @@ namespace Mippa.Models
 
             // Before removing old matches, we have to make sure that there are no scorecards that were edited
 
-            bool hasScorecardsEdited = false;
+            //bool hasScorecardsEdited = false;
 
             foreach (var match in currentMatchups)
             {
                 if (match.Scorecards.Any(x => x.State != ScorecardState.Initial))
                 {
-                    hasScorecardsEdited = true;
+                    //hasScorecardsEdited = true;
                     break;
                 }
             }
