@@ -34,10 +34,15 @@
                 <a class="mobile-nav-icon js--nav-icon"><i class="ion-navicon-round"></i></a>
             </div>
             <div class="header-text-box">
-                <h1>MIPPA</h1>
-                <a class="btn btn-full js--scroll-to-about" href="#">Learn More</a>
-                <a class="btn btn-ghost js--scroll-to-contact" href="#">Contact</a>
-                <a class="btn btn-ghost" asp-action="tournaments">State Tournament</a>
+                <div class="col span-1-of-3 numbers-box js--wp-1">
+                    @Model.PlayerCount Players
+                </div>
+                <div class="col span-1-of-3 numbers-box js--wp-2">
+                    $@Model.AdminFund Admin Fund
+                </div>
+                <div class="col span-1-of-3 numbers-box js--wp-3">
+                    $@Model.PlayerFund Player Fund
+                </div>
             </div>
         </nav>
     </header>
@@ -78,21 +83,6 @@
                 <p>
                     MIPPA houses a web application that works on major phones, tablets, and personal computers via a web browser.  The app keeps track of player/team statistics and scores
                 </p>
-            </div>
-        </div>
-    </section>
-
-    <section class="section-numbers">
-        <h2>By The Numbers</h2>
-        <div class="row">
-            <div class="col span-1-of-3 numbers-box js--wp-1">
-                @Model.PlayerCount Players
-            </div>
-            <div class="col span-1-of-3 numbers-box js--wp-2">
-                $@Model.AdminFund Admin Fund
-            </div>
-            <div class="col span-1-of-3 numbers-box js--wp-3">
-                $@Model.PlayerFund Player Fund
             </div>
         </div>
     </section>

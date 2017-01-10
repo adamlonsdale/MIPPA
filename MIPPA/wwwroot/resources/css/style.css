@@ -301,6 +301,7 @@ input[type=submit]:active {
 .numbers-box {
     border: 1px solid #1abc9c;
     border-radius: 20px;
+    color: white;
     text-align: center;
     padding: 20px;
     text-transform: uppercase;
