@@ -23,5 +23,7 @@ namespace Mippa.Models
         public virtual ICollection<Schedule> Schedules { get; set; }
         [NotMapped]
         public ScheduleViewModel ScheduleViewModel { get; set; }
+
+        public bool Active { get; set; }
     }
 }

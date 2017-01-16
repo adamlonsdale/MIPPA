@@ -24,5 +24,11 @@ namespace Mippa.Controllers.Api
         {
             _repository.FinalizeAllScorecards();
         }
+
+        [HttpGet("{sessionId}")]
+        public void SetSessionInactive(int sessionId)
+        {
+            _repository.SetSessionInactive(sessionId);
+        }
     }
 }

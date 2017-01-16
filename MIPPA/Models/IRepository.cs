@@ -20,6 +20,7 @@ namespace Mippa.Models
     /// </summary>
     public interface IRepository
     {
+        void SetSessionInactive(int sessionId);
         void PostMatchups(int sessionId, int scheduleIndex, WeekViewModel viewModel);
         WeekViewModel GetWeekViewModel(int sessionId, int scheduleIndex);
         void FinalizeMatch(int scorecardId);

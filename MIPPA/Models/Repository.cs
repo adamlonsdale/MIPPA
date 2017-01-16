@@ -24,6 +24,21 @@ namespace Mippa.Models
             _logger = logger;
         }
 
+        public void SetSessionInactive(int sessionId)
+        {
+            var sessionFromContext =
+                _context.Sessions.SingleOrDefault(x => x.SessionId == sessionId);
+
+            if (sessionFromContext == null)
+            {
+                return;
+            }
+
+            sessionFromContext.Active = false;
+
+            _context.SaveChanges();
+        }
+
         public void PostMatchups(int sessionId, int scheduleIndex, WeekViewModel viewModel)
         {
             var schedule =

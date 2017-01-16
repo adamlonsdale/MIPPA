@@ -15,6 +15,10 @@
                     </div>
                     @foreach (var session in manager.Sessions)
                     {
+                        @if (!session.Active)
+                        {
+                            continue;
+                        }
                         <div class="list-group-item">
                             <h4>@session.Name</h4>
                             <div>
