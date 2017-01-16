@@ -37,6 +37,6 @@
     </div>
 </form>
 
-<button class="btn btn-sm btn-info" *ngIf="typeaheadNoResults===true" [disabled]="selectedHandicap < 4" (click)="onAddNew()" data-dismiss="modal">Add Brand New</button>
-<button class="btn btn-sm btn-info" *ngIf="typeaheadNoResults===false && selectedPlayer != null" [disabled]="selectedHandicap < 4" (click)="onAddAsSub()" data-dismiss="modal">Add Existing Player</button>
+<button class="btn btn-sm btn-info" *ngIf="typeaheadNoResults===true" [disabled]="selectedHandicap < 4 || pendingAdd" (click)="onAddNew()" data-dismiss="modal">Add Brand New</button>
+<button class="btn btn-sm btn-info" *ngIf="typeaheadNoResults===false && selectedPlayer != null" [disabled]="selectedHandicap < 4 || pendingAdd" (click)="onAddAsSub()" data-dismiss="modal">Add Existing Player</button>
 <button class="btn btn-sm btn-warning" *ngIf="selectedPlayer != null" (click)="selectedPlayer = null; asyncSelected = ''; selectedHandicap = 4; disableHandicap = true;">Start Over</button>

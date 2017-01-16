@@ -15,13 +15,14 @@ export class SubstituteComponent {
     @Output() onAdd = new EventEmitter<Player>();
     public dataSource: Observable<any>;
     public asyncSelected: string = '';
-    players: any[];
+    players: Player[];
     public typeaheadLoading: boolean = false;
     public typeaheadNoResults: boolean = false;
     public selectedPlayer: any;
     public playerExists: boolean = false;
     disableHandicap: boolean = true;
     selectedHandicap: number = 4;
+    pendingAdd: boolean = false;
 
     public constructor(private scorecardService: ScorecardService) {
         this.dataSource = Observable.create((observer: any) => {
@@ -38,6 +39,13 @@ export class SubstituteComponent {
     }
 
     onAddAsSub() {
+        this.pendingAdd = true;
+
+        if (this.checkIfDuplicatePlayer(this.selectedPlayer)) {
+            this.pendingAdd = false;
+            return;
+        }
+
         if (!this.selectedPlayer.existsInSession) {
             this.selectedPlayer.handicap = this.selectedHandicap;
         }
@@ -45,10 +53,19 @@ export class SubstituteComponent {
             .subscribe(
             data => {
                 this.onAdd.emit(this.selectedPlayer);
+                this.pendingAdd = false;
+                this.clear();
             });
     }
 
     onAddNew() {
+        this.pendingAdd = true;
+
+        if (this.checkIfDuplicatePlayer(this.selectedPlayer)) {
+            this.pendingAdd = false;
+            return;
+        }
+
         var player: any = {};
         player.name = this.asyncSelected;
 
@@ -63,9 +80,18 @@ export class SubstituteComponent {
                         .subscribe(
                         data => {
                             this.onAdd.emit(player);
+                            this.pendingAdd = false;
+                            this.clear();
                         });
                 }
             });
+    }
+
+    checkIfDuplicatePlayer(player: Player): boolean {
+        var playerExists =
+            this.players.filter(p => p.playerId == player.playerId).length > 0;
+
+        return playerExists;
     }
 
     clear() {
