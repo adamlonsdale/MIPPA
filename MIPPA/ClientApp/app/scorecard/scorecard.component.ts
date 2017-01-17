@@ -218,6 +218,26 @@ export class ScorecardComponent implements OnInit, OnDestroy {
         }
     }
 
+    onAddNewSub(player: PlayerViewModel, home: boolean) {
+        if (home) {
+
+            if (this.viewModel.homePlayers.filter(p => p.playerId == player.playerId).length > 0) {
+                return;
+            }
+
+            this.lineup.homePlayers.push(player);
+            this.viewModel.homePlayers.push(player);
+        }
+        else {
+
+            if (this.viewModel.awayPlayers.filter(p => p.playerId == player.playerId).length > 0) {
+                return;
+            }
+            this.lineup.awayPlayers.push(player);
+            this.viewModel.awayPlayers.push(player);
+        }
+    }
+
     addPlayerToRoster(home: boolean) {
         if (home) {
             if (this.selectedHomePlayer == undefined) {

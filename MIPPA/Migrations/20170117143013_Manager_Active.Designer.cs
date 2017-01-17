@@ -8,9 +8,10 @@ using Mippa.Models;
 namespace MIPPA_Angular.Migrations
 {
     [DbContext(typeof(MippaContext))]
-    partial class MippaContextModelSnapshot : ModelSnapshot
+    [Migration("20170117143013_Manager_Active")]
+    partial class Manager_Active
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")

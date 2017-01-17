@@ -1418,7 +1418,7 @@ namespace Mippa.Models
                             {
                                 TeamId = x.TeamId,
                                 Name = x.Name,
-                                Players = x.Players.Select(y => new PlayerViewModel { Name = y.Player.Name, Handicap = y.Handicap })
+                                Players = x.Players.Select(y => new PlayerViewModel { Name = y.Player.Name, PlayerId = y.PlayerId, Handicap = y.Handicap })
                             })
                     });
             }

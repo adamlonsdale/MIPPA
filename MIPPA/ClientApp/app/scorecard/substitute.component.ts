@@ -12,6 +12,7 @@ declare var jQuery: any;
 export class SubstituteComponent {
     @Input() sessionId: number;
     @Input() teamId: number;
+    @Input() filterPlayers: Player[] = [];
     @Output() onAdd = new EventEmitter<Player>();
     public dataSource: Observable<any>;
     public asyncSelected: string = '';
@@ -88,8 +89,12 @@ export class SubstituteComponent {
     }
 
     checkIfDuplicatePlayer(player: Player): boolean {
+        if (this.filterPlayers.length == 0) {
+            return false;
+        }
+
         var playerExists =
-            this.players.filter(p => p.playerId == player.playerId).length > 0;
+            this.filterPlayers.filter(p => p.playerId == player.playerId).length > 0;
 
         return playerExists;
     }

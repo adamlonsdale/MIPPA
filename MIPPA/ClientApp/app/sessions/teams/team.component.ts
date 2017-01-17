@@ -73,6 +73,12 @@ export class TeamComponent implements OnInit {
     }
 
     addPlayerToTeam(player: any) {
+        var filter = this.team.players.filter(p => p.playerId == player.playerId);
+
+        if (filter.length > 0) {
+            return;
+        }
+
         this.team.players.push(player);
     }
 

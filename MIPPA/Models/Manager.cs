@@ -16,5 +16,6 @@ namespace Mippa.Models
 
         //[JsonIgnore]
         public virtual ICollection<Session> Sessions { get; set; }
+        public bool Active { get; set; }
     }
 }

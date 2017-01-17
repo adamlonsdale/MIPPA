@@ -61,6 +61,7 @@
 					<div class="col-xs-12">
 						<add-substitute [sessionId]="sessionId"
 										[teamId]="team.teamId"
+                                        [filterPlayers]="team.players"
 										(onAdd)="addPlayerToTeam($event)"
 										#addPlayerComponent></add-substitute>
 					</div>

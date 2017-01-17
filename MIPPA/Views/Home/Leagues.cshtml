@@ -7,6 +7,10 @@
 <div class="container">
     @foreach (var manager in Model)
     {
+        @if (!manager.Active)
+        {
+            continue;
+        }
         <div class="row">
             <div class="col-xs-12">
                 <div class="list-group">

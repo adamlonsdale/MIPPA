@@ -255,7 +255,8 @@
                     <div class="col-xs-12">
                         <add-substitute [sessionId]="viewModel.sessionId"
                                         [teamId]="viewModel.homeTeamId"
-                                        (onAdd)="lineup.homePlayers.push($event); viewModel.homePlayers.push($event);"
+                                        [filterPlayers]="viewModel.homePlayers"
+                                        (onAdd)="onAddNewSub($event, true)"
                                         #homeSub></add-substitute>
                     </div>
                 </div>
@@ -287,7 +288,8 @@
                     <div class="col-xs-12">
                         <add-substitute [sessionId]="viewModel.sessionId"
                                         [teamId]="viewModel.awayTeamId"
-                                        (onAdd)="lineup.awayPlayers.push($event); viewModel.awayPlayers.push($event);"
+                                        [filterPlayers]="viewModel.awayPlayers"
+                                        (onAdd)="onAddNewSub($event, false)"
                                         #awaySub></add-substitute>
                     </div>
                 </div>
