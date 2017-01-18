@@ -89,6 +89,10 @@ export class SubstituteComponent {
     }
 
     checkIfDuplicatePlayer(player: Player): boolean {
+        if (player === undefined || player === null) {
+            return false;
+        }
+
         if (this.filterPlayers.length == 0) {
             return false;
         }
