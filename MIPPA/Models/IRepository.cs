@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MIPPA.ViewModels;
 using MIPPA.ViewModels.Scheduler;
+using MIPPA.Models;
 
 namespace Mippa.Models
 {
@@ -20,6 +21,7 @@ namespace Mippa.Models
     /// </summary>
     public interface IRepository
     {
+        IEnumerable<PlayerCount> GetPlaysForSeason();
         void SetSessionInactive(int sessionId);
         void PostMatchups(int sessionId, int scheduleIndex, WeekViewModel viewModel);
         WeekViewModel GetWeekViewModel(int sessionId, int scheduleIndex);

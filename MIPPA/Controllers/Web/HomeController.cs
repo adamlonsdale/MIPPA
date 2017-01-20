@@ -20,11 +20,13 @@ namespace MIPPA.Controllers.Web
     {
         private readonly MippaContext _context;
         private readonly EmailSettings _emailSettings;
+        private IRepository _repo;
 
-        public HomeController(MippaContext context, IOptions<EmailSettings> emailSettings)
+        public HomeController(MippaContext context, IOptions<EmailSettings> emailSettings, IRepository repo)
         {
             _context = context;
             _emailSettings = emailSettings.Value;
+            _repo = repo;
         }
 
         public IActionResult Index()
@@ -59,6 +61,13 @@ namespace MIPPA.Controllers.Web
         public IActionResult Error()
         {
             return View();
+        }
+
+        public IActionResult Qualifications()
+        {
+            var plays = _repo.GetPlaysForSeason();
+
+            return View(plays);
         }
 
         public async Task<IActionResult> SubmitPlayerMemberInfo([FromForm] PlayerMemberInfo playerMemberInfo)

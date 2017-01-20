@@ -10,6 +10,12 @@ using Mippa.ViewModels.Statistics;
 using MIPPA.ViewModels;
 using MIPPA.Utilities;
 using MIPPA.ViewModels.Scheduler;
+using Microsoft.Extensions.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using Dapper;
+using MIPPA.Models;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Mippa.Models
 {
@@ -18,10 +24,42 @@ namespace Mippa.Models
         private readonly MippaContext _context;
         private ILogger<Repository> _logger;
 
-        public Repository(MippaContext context, ILogger<Repository> logger)
+        public IConfigurationRoot Configuration { get; }
+
+        public Repository(MippaContext context, ILogger<Repository> logger, IHostingEnvironment env)
         {
             _context = context;
             _logger = logger;
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
+        }
+
+        private IDbConnection Connection
+        {
+            get
+            {
+                return new SqlConnection(Configuration.GetConnectionString("DefaultConnection"));
+            }
+        }
+
+        public IEnumerable<PlayerCount> GetPlaysForSeason()
+        {
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            IEnumerable<PlayerCount> playerCounts = Enumerable.Empty<PlayerCount>();
+
+            using (IDbConnection conn = Connection)
+            {
+                conn.Open();
+                playerCounts = conn.Query<PlayerCount>("dbo.getPlayerCountsForSeason", commandType: CommandType.StoredProcedure);
+            }
+
+            return playerCounts;
         }
 
         public void SetSessionInactive(int sessionId)
