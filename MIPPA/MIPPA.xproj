@@ -13,10 +13,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
-    <ApplicationInsightsResourceId>/subscriptions/f411600d-80d6-43ba-b67e-2d7e521faf1d/resourcegroups/MippaResourceGroup/providers/microsoft.insights/components/MippaInsights</ApplicationInsightsResourceId>
   </PropertyGroup>
-  <ItemGroup>
-    <DnxInvisibleContent Include="ClientApp\app\scorecard\old.html" />
-  </ItemGroup>
   <Import Project="$(VSToolsPath)\DotNet.Web\Microsoft.DotNet.Web.targets" Condition="'$(VSToolsPath)' != ''" />
 </Project>

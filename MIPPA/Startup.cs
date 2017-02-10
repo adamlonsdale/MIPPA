@@ -24,11 +24,6 @@ namespace MIPPA
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
-
-            if (env.IsDevelopment())
-            {
-                builder.AddApplicationInsightsSettings(developerMode: true);
-            }
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -36,7 +31,6 @@ namespace MIPPA
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplicationInsightsTelemetry(Configuration);
             services.AddDbContext<MippaContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
@@ -50,9 +44,6 @@ namespace MIPPA
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            // Add Application Insights monitoring to the request pipeline as a very first middleware.
-            app.UseApplicationInsightsRequestTelemetry();
-
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -65,11 +56,9 @@ namespace MIPPA
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseDeveloperExceptionPage();
+                //app.UseExceptionHandler("/Home/Error");
             }
-
-            // Add Application Insights exceptions handling to the request pipeline.
-            app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseStaticFiles();
 
